@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class TimerUI : MonoBehaviour
 {
+    //Time Variables
     public float remainingTime;
     private bool timeLeft;
 
+    //Timer Text
     public TextMeshProUGUI timerText;
     
     // Start is called before the first frame update
@@ -23,6 +25,7 @@ public class TimerUI : MonoBehaviour
         {
             if (remainingTime > 0)
             {
+                //Negate Delta Time for Each Update
                 remainingTime -= Time.deltaTime;
                 UpdateTimer(remainingTime);
             }
@@ -34,6 +37,7 @@ public class TimerUI : MonoBehaviour
         }
     }
 
+    //Update Timer Text
     void UpdateTimer(float currentTime)
     {
         currentTime += 1;
@@ -42,10 +46,5 @@ public class TimerUI : MonoBehaviour
         float seconds = Mathf.FloorToInt(currentTime % 60);
 
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-    }
-
-    void TimerAnimation()
-    {
-        
     }
 }
