@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private float originalStepOffset;
     private float? lastGroundedTime;
     private float? jumpButtonPressedTime;
-
+    [SerializeField] private Transform followCamera;
     // Start is called before the first frame update
     void Start()
     {
