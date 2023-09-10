@@ -6,8 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class LoadScene : MonoBehaviour
 {
-
-    private Button btn;
+	private Button btn;
 	void Start () {
 		Button btn = GetComponent<Button>();
 		btn.onClick.AddListener(TaskOnClick);
