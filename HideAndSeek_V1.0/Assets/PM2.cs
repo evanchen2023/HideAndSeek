@@ -2,12 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PM2 : MonoBehaviour
 {
-    public float speed;
+    [SerializeField]
+    public float maximumSpeed;
+
+    [SerializeField]
     public float rotationSpeed;
+
+    [SerializeField]
     public float jumpSpeed;
+
+    [SerializeField]
     public float jumpButtonGracePeriod;
+
+    [SerializeField]
+    private Transform cameraTransform;
 
     private Animator animator;
     private CharacterController characterController;
@@ -15,8 +25,7 @@ public class PlayerMovement : MonoBehaviour
     private float originalStepOffset;
     private float? lastGroundedTime;
     private float? jumpButtonPressedTime;
-    [SerializeField] private Transform followCamera;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,9 +41,17 @@ public class PlayerMovement : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
 
         Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
+        float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+        
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        {
+            inputMagnitude /= 2;
+        }
 
-        movementDirection = transform.TransformDirection(movementDirection); //world direction
-        float magnitude = Mathf.Clamp01(movementDirection.magnitude) * speed;
+        animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Time.deltaTime);
+
+        float speed = inputMagnitude * maximumSpeed;
+        movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
         movementDirection.Normalize();
 
         ySpeed += Physics.gravity.y * Time.deltaTime;
@@ -43,47 +60,57 @@ public class PlayerMovement : MonoBehaviour
         {
             lastGroundedTime = Time.time;
         }
-        
+
         if (Input.GetButtonDown("Jump"))
         {
             jumpButtonPressedTime = Time.time;
         }
 
-        if(Time.time - lastGroundedTime <= jumpButtonGracePeriod)
+        if (Time.time - lastGroundedTime <= jumpButtonGracePeriod)
         {
             characterController.stepOffset = originalStepOffset;
             ySpeed = -0.5f;
-            if(Time.time - jumpButtonPressedTime <= jumpButtonGracePeriod)
+
+            if (Time.time - jumpButtonPressedTime <= jumpButtonGracePeriod)
             {
                 ySpeed = jumpSpeed;
                 jumpButtonPressedTime = null;
                 lastGroundedTime = null;
             }
         }
-        //set the character setpOffset to 0 when it's not on the ground
-        else 
+        else
         {
             characterController.stepOffset = 0;
         }
 
-        Vector3 velocity = movementDirection * magnitude;
+        Vector3 velocity = movementDirection * speed;
         velocity.y = ySpeed;
+
         characterController.Move(velocity * Time.deltaTime);
 
         if (movementDirection != Vector3.zero)
         {
-            animator.SetBool("IsWalking", true);
             Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
 
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation,
-                toRotation,
-                rotationSpeed * Time.deltaTime
-            );
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
         else
         {
-            animator.SetBool("IsWalking", false);
+            animator.SetBool("IsMoving", false);
+        }
+    }
+
+
+    //this one will hide the cursor when we move the mouse:
+    private void OnApplicationFocus(bool focus)
+    {
+        if (focus)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }
