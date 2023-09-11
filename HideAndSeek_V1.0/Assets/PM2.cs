@@ -42,11 +42,14 @@ public class PM2 : MonoBehaviour
 
         Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
         float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
-        
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+        inputMagnitude /= 2;
+
+
+        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) )
         {
-            inputMagnitude /= 2;
+            inputMagnitude = Mathf.Clamp01(movementDirection.magnitude); 
         }
+        
 
         animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Time.deltaTime);
 
@@ -64,6 +67,11 @@ public class PM2 : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jumpButtonPressedTime = Time.time;
+            animator.SetBool("IsJump", true);
+        }
+        else
+        {
+            animator.SetBool("IsJump", false);
         }
 
         if (Time.time - lastGroundedTime <= jumpButtonGracePeriod)
@@ -94,10 +102,10 @@ public class PM2 : MonoBehaviour
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
-        else
-        {
-            animator.SetBool("IsMoving", false);
-        }
+        //else
+        //{
+        //    animator.SetBool("IsMoving", false);
+        //}
     }
 
 
