@@ -10,9 +10,11 @@ public class Timer : MonoBehaviour
     private float currentTimeInSeconds;
     private bool countDown;
 
-
+    private WinCondition winCondition;
     private void Start()
     {
+        winCondition = GetComponent<WinCondition>();
+        
         countDown = true;
         currentTimeInSeconds = timeInSeconds;
     }
@@ -32,8 +34,14 @@ public class Timer : MonoBehaviour
             {
                 countDown = false;
                 currentTimeInSeconds = 0;
+                SetEndGame();
             }
         }
+    }
+
+    private void SetEndGame()
+    {
+        winCondition.GameEnd();
     }
 
     public bool GetCountDown()

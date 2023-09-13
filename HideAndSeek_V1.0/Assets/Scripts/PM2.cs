@@ -25,10 +25,19 @@ public class PM2 : MonoBehaviour
     private float originalStepOffset;
     private float? lastGroundedTime;
     private float? jumpButtonPressedTime;
+    
+    //Game Manager
+    private GameObject gameManager;
+    private WinCondition winCondition;
 
     // Start is called before the first frame update
     void Start()
     {
+        //UI Interaction
+        Cursor.lockState = CursorLockMode.Locked;
+        gameManager = GameObject.FindWithTag("Manager");
+        winCondition = gameManager.GetComponent<WinCondition>(); //Script with Timer Check Function
+
         animator = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         originalStepOffset = characterController.stepOffset;
@@ -37,75 +46,78 @@ public class PM2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-
-        Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
-        float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
-        inputMagnitude /= 2;
-
-
-        if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) )
+        if (winCondition.GetControlsActive()) //Can Only Move While Timer is Running
         {
-            inputMagnitude = Mathf.Clamp01(movementDirection.magnitude); 
-        }
-        
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
 
-        animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Time.deltaTime);
+            Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
+            float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+            inputMagnitude /= 2;
 
-        float speed = inputMagnitude * maximumSpeed;
-        movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) * movementDirection;
-        movementDirection.Normalize();
-
-        ySpeed += Physics.gravity.y * Time.deltaTime;
-
-        if (characterController.isGrounded)
-        {
-            lastGroundedTime = Time.time;
-        }
-
-        if (Input.GetButtonDown("Jump"))
-        {
-            jumpButtonPressedTime = Time.time;
-            animator.SetBool("IsJump", true);
-        }
-        else
-        {
-            animator.SetBool("IsJump", false);
-        }
-
-        if (Time.time - lastGroundedTime <= jumpButtonGracePeriod)
-        {
-            characterController.stepOffset = originalStepOffset;
-            ySpeed = -0.5f;
-
-            if (Time.time - jumpButtonPressedTime <= jumpButtonGracePeriod)
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                ySpeed = jumpSpeed;
-                jumpButtonPressedTime = null;
-                lastGroundedTime = null;
+                inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+            }
+            
+            animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Time.deltaTime);
+
+            float speed = inputMagnitude * maximumSpeed;
+            movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) *
+                                movementDirection;
+            movementDirection.Normalize();
+
+            ySpeed += Physics.gravity.y * Time.deltaTime;
+
+            if (characterController.isGrounded)
+            {
+                lastGroundedTime = Time.time;
+            }
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                jumpButtonPressedTime = Time.time;
+                animator.SetBool("IsJump", true);
+            }
+            else
+            {
+                animator.SetBool("IsJump", false);
+            }
+
+            if (Time.time - lastGroundedTime <= jumpButtonGracePeriod)
+            {
+                characterController.stepOffset = originalStepOffset;
+                ySpeed = -0.5f;
+
+                if (Time.time - jumpButtonPressedTime <= jumpButtonGracePeriod)
+                {
+                    ySpeed = jumpSpeed;
+                    jumpButtonPressedTime = null;
+                    lastGroundedTime = null;
+                }
+            }
+            else
+            {
+                characterController.stepOffset = 0;
+            }
+
+            Vector3 velocity = movementDirection * speed;
+            velocity.y = ySpeed;
+
+            characterController.Move(velocity * Time.deltaTime);
+
+            if (movementDirection != Vector3.zero)
+            {
+                Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+
+                transform.rotation =
+                    Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
             }
         }
         else
         {
-            characterController.stepOffset = 0;
+            animator.SetFloat("Input Magnitude", 0, 0.05f, Time.deltaTime); //Reset Animations
         }
-
-        Vector3 velocity = movementDirection * speed;
-        velocity.y = ySpeed;
-
-        characterController.Move(velocity * Time.deltaTime);
-
-        if (movementDirection != Vector3.zero)
-        {
-            Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
-        }
-        //else
-        //{
-        //    animator.SetBool("IsMoving", false);
-        //}
     }
 
 
