@@ -5,35 +5,31 @@ using UnityEngine;
 
 public class TimerUI : MonoBehaviour
 {
-    //Time Variables
-    public float remainingTime;
-    private bool timeLeft;
-
     //Timer Text
-    public TextMeshProUGUI timerText;
+    private TextMeshProUGUI timerText;
+    private GameObject GameManager;
+    private Timer timerData;
     
     // Start is called before the first frame update
     void Start()
     {
-        timeLeft = true;
+        timerText = GetComponent<TextMeshProUGUI>();
+        GameManager = GameObject.FindGameObjectWithTag("Manager");
+        
+        //Timer Variables
+        timerData = GameManager.GetComponent<Timer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (timeLeft)
+        if (timerData.GetCountDown())
         {
-            if (remainingTime > 0)
-            {
-                //Negate Delta Time for Each Update
-                remainingTime -= Time.deltaTime;
-                UpdateTimer(remainingTime);
-            }
-            else
-            {
-                remainingTime = 0;
-                timeLeft = false;
-            }
+            UpdateTimer(timerData.GetCurrentTime());
+        }
+        else
+        {
+            UpdateTimer(-1);
         }
     }
 
