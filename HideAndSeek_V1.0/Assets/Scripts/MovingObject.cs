@@ -17,14 +17,23 @@ public class MovingObject : MonoBehaviour
 
     private float _timeToPathpoint;
     private float _elapsedTime;
+    private bool shouldMove = false;
 
     void Start()
     {
+        StartCoroutine(StartMovingAfterDelay(20f));
+    }
+
+    IEnumerator StartMovingAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        shouldMove = true;
         TargetNextPathpoint();
     }
 
     void FixedUpdate()
     {
+        if(!shouldMove) return;
         _elapsedTime += Time.deltaTime;
 
         float elapsedPercentage = _elapsedTime / _timeToPathpoint;
