@@ -23,8 +23,8 @@ public class GeneratePumpkins : MonoBehaviour
     {
         while (pumpkinCount < 10)
         {
-            xPos = Random.Range(21, 76);
-            zPos = Random.Range(2, 76);
+            xPos = Random.Range(26, 76);
+            zPos = Random.Range(16, 78);
 
             // Get Terrain Height
             float terrainHeight = terrain.SampleHeight(new Vector3(xPos, 0, zPos));
