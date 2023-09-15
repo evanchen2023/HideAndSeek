@@ -13,10 +13,30 @@ public class GeneratePumpkins : MonoBehaviour
 
     public float minDistance = 5.0f;
     List<Vector3> generatedPositions = new List<Vector3>();
+    List<Vector3> treePositions = new List<Vector3>();
+    List<Rect> stoneAreas = new List<Rect> //stone locations
+    {
+        new Rect(31,54,6,6),
+        new Rect(23,72,7,4),
+        new Rect(75,62,7,6),
+        new Rect(76,25,6,7)
+    };
 
     void Start()
     {
+        LoadTreePositions();
         StartCoroutine(PumpkinDrop());
+    }
+
+    void LoadTreePositions()
+    {
+        TerrainData terrainData = terrain.terrainData;
+        TreeInstance[] treeInstances = terrainData.treeInstances;
+        foreach(var tree in treeInstances)
+        {
+            Vector3 pos = Vector3.Scale(tree.position, terrainData.size) + terrain.transform.position;
+            treePositions.Add(pos);
+        }
     }
 
     IEnumerator PumpkinDrop()
@@ -34,6 +54,7 @@ public class GeneratePumpkins : MonoBehaviour
 
             bool tooClose = false;
 
+            //check if too close to another pumpkins
             foreach(var pos in generatedPositions)
             {
                 if(Vector3.Distance(pumpkinPosition, pos) < minDistance)
@@ -43,12 +64,31 @@ public class GeneratePumpkins : MonoBehaviour
                 }
             }
 
+            //check if within forbidden stone areas
+            foreach(var rect in stoneAreas)
+            {
+                if(rect.Contains(new Vector2(xPos, zPos)))
+                {
+                    tooClose = true;
+                    break;
+                }
+            }
+
+            foreach(var pos in treePositions)
+            {
+                if(Vector3.Distance(pumpkinPosition, pos) < minDistance)
+                {
+                    tooClose = true;
+                    break;
+                }
+            }
+
+            //check if the spot is free from any obstructions
             if(!tooClose)
             {
                 // Instantiate pumpkins with pumpkinPosition
                 Instantiate(pumpkin, pumpkinPosition, Quaternion.identity);
                 generatedPositions.Add(pumpkinPosition);
-
                 yield return new WaitForSeconds(0.2f);
                 pumpkinCount += 1;
             }
