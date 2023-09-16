@@ -19,6 +19,8 @@ public class PM2 : MonoBehaviour
     [SerializeField]
     private Transform cameraTransform;
 
+    [SerializeField] AudioSource jumpSound;
+    
     private Animator animator;
     private CharacterController characterController;
     private float ySpeed;
@@ -50,7 +52,7 @@ public class PM2 : MonoBehaviour
         {
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
-
+            
             Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
             float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
             inputMagnitude /= 2;
@@ -78,6 +80,7 @@ public class PM2 : MonoBehaviour
             {
                 jumpButtonPressedTime = Time.time;
                 animator.SetBool("IsJump", true);
+                jumpSound.Play();
             }
             else
             {

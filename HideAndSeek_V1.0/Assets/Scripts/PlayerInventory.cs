@@ -7,11 +7,14 @@ public class PlayerInventory : MonoBehaviour
 {
     public int NumberOfProps { get; private set; }
 
+    [SerializeField] AudioSource collectionSound;
+
     public UnityEvent<PlayerInventory> OnPropsCollected;
 
     public void PropsCollected()
     {
         NumberOfProps++;
         OnPropsCollected.Invoke(this);
+        collectionSound.Play();
     }
 }
