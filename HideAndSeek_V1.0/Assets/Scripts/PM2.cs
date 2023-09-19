@@ -19,8 +19,12 @@ public class PM2 : MonoBehaviour
     [SerializeField]
     private Transform cameraTransform;
 
-    [SerializeField] AudioSource jumpSound;
-    
+    [SerializeField] private AudioSource jumpSound;
+    [SerializeField] private AudioSource footstepSound;
+    [SerializeField] private AudioSource runSound;
+    private bool isRunning = false;
+    private bool isJumping = false;
+
     private Animator animator;
     private CharacterController characterController;
     private float ySpeed;
@@ -52,7 +56,42 @@ public class PM2 : MonoBehaviour
         {
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
-            
+            bool isMoving = Mathf.Abs(horizontalInput) > 0.1f || Mathf.Abs(verticalInput) > 0.1f;
+
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                isRunning = true;
+            }
+            else
+            {
+                isRunning = false;
+            }
+            if (characterController.isGrounded && Input.GetButtonDown("Jump"))
+            {
+                isJumping = true;
+            }
+            else if (characterController.isGrounded)
+            {
+                isJumping = false;
+            }
+            if (isMoving && !isRunning && !isJumping && !footstepSound.isPlaying)
+            {
+                footstepSound.Play();
+            }
+            else if ((!isMoving || isRunning || isJumping) && footstepSound.isPlaying)
+            {
+                footstepSound.Stop();
+            }
+            if (isRunning && !isJumping && !runSound.isPlaying)
+            {
+                runSound.Play();
+            }
+            else if ((!isRunning || isJumping) && runSound.isPlaying)
+            {
+                runSound.Stop();
+            }
+
+
             Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
             float inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
             inputMagnitude /= 2;
