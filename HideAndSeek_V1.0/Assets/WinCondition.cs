@@ -12,6 +12,7 @@ public class WinCondition : MonoBehaviour
     //External
     private GameObject player;
     private PlayerInventory playerInventory;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,7 @@ public class WinCondition : MonoBehaviour
         controlsActive = true;
         player = GameObject.FindGameObjectWithTag("Player");
         playerInventory = player.GetComponent<PlayerInventory>();
+        animator = player.GetComponent<Animator>();
     }
 
     public void GameEnd()
@@ -32,9 +34,22 @@ public class WinCondition : MonoBehaviour
     {
         if (playerInventory.NumberOfProps < propsToCollect)
         {
+            DefeatAnimation();
             return false;
+        } else {
+            VictoryAnimation();
+            return true;
         }
-        return true;
+    }
+
+    private void VictoryAnimation()
+    {
+        animator.SetBool("IsWin", true);
+        Debug.Log(animator.GetCurrentAnimatorStateInfo(0));
+    }
+
+    private void DefeatAnimation(){
+        animator.SetBool("IsLose", true);
     }
 
     public bool GetControlsActive()

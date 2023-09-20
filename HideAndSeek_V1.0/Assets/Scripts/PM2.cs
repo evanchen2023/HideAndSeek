@@ -158,6 +158,7 @@ public class PM2 : MonoBehaviour
         }
         else
         {
+            //animator.SetBool("IsWin", true);
             animator.SetFloat("Input Magnitude", 0, 0.05f, Time.deltaTime); //Reset Animations
         }
     }
