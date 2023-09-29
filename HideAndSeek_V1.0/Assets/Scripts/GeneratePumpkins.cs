@@ -16,10 +16,10 @@ public class GeneratePumpkins : MonoBehaviour
     List<Vector3> treePositions = new List<Vector3>();
     List<Rect> stoneAreas = new List<Rect> //stone locations
     {
-        new Rect(31,54,6,6),
-        new Rect(23,72,7,4),
-        new Rect(75,62,7,6),
-        new Rect(76,25,6,7)
+        new Rect(31,54,7,7),
+        new Rect(21,72,8,9),
+        new Rect(75,62,7,7),
+        new Rect(76,25,7,7)
     };
 
     void Start()
