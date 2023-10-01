@@ -14,29 +14,27 @@ public class Player : NetworkBehaviour, IPlayerLeft
     //Control Variables
     public float playerSpeed;
     public float jumpSpeed;
+    public float viewSpeed;
     private Vector3 moveVelocity;
     
     //Camera
     private Vector2 viewInput;
     private float camRotateX;
+    private float camRotateY;
     private Camera localCamera;
     
-    //Camera
-    public bool is3rdPersonCamera { get; set; }
-
     void Awake()
     {
+        //Character Controller
         nccp = gameObject.GetComponent<NetworkCharacterControllerPrototype>();
+        
+        //Camera
         localCamera = gameObject.GetComponentInChildren<Camera>();
     }
 
     private void LateUpdate()
     {
-        //Camera X Rotation
-        camRotateX += viewInput.y * Time.deltaTime;
-        camRotateX = Mathf.Clamp(camRotateX, -90, 90);
-        
-        localCamera.transform.localRotation = Quaternion.Euler(camRotateX, 0, 0);
+
     }
     
     public override void FixedUpdateNetwork()
@@ -54,8 +52,11 @@ public class Player : NetworkBehaviour, IPlayerLeft
             
             //Get Movement
             Vector3 cameraRelativeMovement = forwardRelativeVerticalInput + rightRelativeVerticalInput;
-
-            nccp.Rotate(data.rotationDir.x);
+            
+            //Get View Input
+            viewInput = data.rotationDir;
+            
+            nccp.Rotate(viewInput, cameraTransform);
             
             //Jump
             if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
@@ -84,8 +85,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
         }
         else
         {
-            Camera playerCamera = GetComponentInChildren<Camera>();
-            playerCamera.enabled = false;
+            localCamera.enabled = false;
             
             //Only 1 Audio Listener - When Implement
             //AudioListener audioListener = GetComponentInChildren<AudioListener>();

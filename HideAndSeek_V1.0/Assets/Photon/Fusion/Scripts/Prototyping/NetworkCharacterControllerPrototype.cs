@@ -7,6 +7,11 @@ using UnityEngine;
 [DisallowMultipleComponent]
 // ReSharper disable once CheckNamespace
 public class NetworkCharacterControllerPrototype : NetworkTransform {
+  //Private Components
+  private Camera localCamera;
+  private float camRotateX;
+  private float camRotateY;
+  
   [Header("Character Controller Settings")]
   public float gravity       = -9.81f;
   public float jumpImpulse   = 5.0f;
@@ -116,8 +121,16 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
     IsGrounded = Controller.isGrounded;
   }
 
-  public void Rotate(float rotationY)
-  {
-    transform.Rotate(0, rotationY * Runner.DeltaTime * rotationSpeed, 0);
+  public void Rotate(Vector3 viewInput, Transform cameraTransform)
+  { 
+    //Rotate Camera 
+    
+    //Camera X Rotation
+    camRotateX += viewInput.y * Time.deltaTime * rotationSpeed;
+    camRotateY += viewInput.x * Time.deltaTime * rotationSpeed;
+    camRotateX = Mathf.Clamp(camRotateX, -90, 90);
+    
+    //cameraTransform.RotateAround(transform.position, Vector3.up, viewInput);
+    //cameraTransform.localRotation = Quaternion.Euler(camRotateX, camRotateY, 0);
   }
 }
