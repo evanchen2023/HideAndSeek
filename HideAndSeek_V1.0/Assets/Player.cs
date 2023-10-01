@@ -22,6 +22,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
     private float camRotateX;
     private float camRotateY;
     private Camera localCamera;
+    private CinemachineVirtualCamera cmv;
     
     void Awake()
     {
@@ -30,6 +31,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
         
         //Camera
         localCamera = gameObject.GetComponentInChildren<Camera>();
+        cmv = gameObject.GetComponentInChildren<CinemachineVirtualCamera>();
     }
 
     private void LateUpdate()
@@ -56,7 +58,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
             //Get View Input
             viewInput = data.rotationDir;
             
-            nccp.Rotate(viewInput, cameraTransform);
+            nccp.Rotate(viewInput, cameraRelativeMovement, cameraTransform);
             
             //Jump
             if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
@@ -73,7 +75,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
         if (Object.HasInputAuthority)
         {
             Local = this;
-            
+
             //Disable Main Camera
             Camera.main.gameObject.SetActive(false);
             
@@ -86,10 +88,11 @@ public class Player : NetworkBehaviour, IPlayerLeft
         else
         {
             localCamera.enabled = false;
+            cmv.enabled = false;
             
             //Only 1 Audio Listener - When Implement
-            //AudioListener audioListener = GetComponentInChildren<AudioListener>();
-            //audioListener.enabled = false;
+            AudioListener audioListener = GetComponentInChildren<AudioListener>();
+            audioListener.enabled = false;
             
             Debug.Log("Spawned Remote Player");
         }
