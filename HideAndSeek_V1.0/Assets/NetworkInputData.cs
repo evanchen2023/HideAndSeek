@@ -14,5 +14,5 @@ public struct NetworkInputData : INetworkInput
     public byte buttons;
     
     public Vector3 direction;
-
+    public Vector2 rotationDir;
 }

@@ -14,6 +14,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private INetworkSceneManager sceneManager;
     private Dictionary<PlayerRef, NetworkObject> playersList = new Dictionary<PlayerRef, NetworkObject>();
 
+    //Player Settings
     [SerializeField] private NetworkPrefabRef playerPrefab;
 
     public bool connectOnAwake = false;
@@ -103,7 +104,8 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         var data = new NetworkInputData();
 
         data.direction = MovementInput();
-
+        data.rotationDir = ViewInput();
+        
         //Jump Controls
         if (jumpButton)
         {
@@ -121,6 +123,14 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         float verticalInput = Input.GetAxis("Vertical");
         
         return new Vector3(horizontalInput, 0, verticalInput);
+    }
+
+    private Vector2 ViewInput()
+    {
+        float mouseX = Input.GetAxis("Mouse X");
+        float mouseY = Input.GetAxis("Mouse Y") * -1; //Invert Y Mouse
+
+        return new Vector2(mouseX, mouseY);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
