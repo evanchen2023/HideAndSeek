@@ -25,18 +25,6 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             
         }
     }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     async void StartGame(GameMode mode)
     {
@@ -102,11 +90,28 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
+    //Controls
+    private bool jumpButton;
+
+    void Update()
+    {
+        jumpButton = jumpButton | Input.GetKeyDown(KeyCode.Space);
+    }
+
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
         var data = new NetworkInputData();
 
         data.direction = MovementInput();
+
+        //Jump Controls
+        if (jumpButton)
+        {
+            data.buttons |= NetworkInputData.JUMPBUTTON;
+        }
+
+        jumpButton = false;
+
         input.Set(data);
     }
 

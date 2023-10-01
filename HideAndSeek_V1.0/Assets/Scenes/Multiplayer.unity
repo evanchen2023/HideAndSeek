@@ -242,10 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnableHotkeys: 0
-  BaseSkin: {fileID: 11400000, guid: e59b35dfeb4b6f54e9b2791b2a40a510, type: 2}
-  _networkDebugStart: {fileID: 0}
-  _clientCount: 1
-  _isMultiplePeerMode: 0
+  BaseSkin: {fileID: 0}
 --- !u!114 &503288520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,8 +265,6 @@ MonoBehaviour:
   AlwaysShowStats: 0
   InitialScenePath: 
   _currentStage: 0
-  <LastCreatedClientIndex>k__BackingField: 0
-  <CurrentServerMode>k__BackingField: 0
 --- !u!4 &503288521
 Transform:
   m_ObjectHideFlags: 0
@@ -415,67 +410,51 @@ MonoBehaviour:
   OnInput:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnInputMissing:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnConnectedToServer:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnDisconnectedFromServer:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnConnectRequest:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnConnectFailed:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   PlayerJoined:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   PlayerLeft:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnSimulationMessage:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnShutdown:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnSessionListUpdate:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnCustomAuthenticationResponse:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnHostMigration:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnSceneLoadDone:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnSceneLoadStart:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
   OnReliableData:
     m_PersistentCalls:
       m_Calls: []
-    m_CallsDirty: 1
 --- !u!114 &870813763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,6 +469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Sequence: 0
   BlockingLayers:
+    serializedVersion: 2
     m_Bits: 0
   BlockedCheckRadius: 2
 --- !u!114 &870813764
@@ -531,13 +511,6 @@ MonoBehaviour:
   m_Script: {fileID: -1199893898, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _printedInterestGroupsWarning: 0
-  _connectionToken: []
-  _remotePrefabsWaitingForSpawnedCallback: []
-  <IsHostMigrationEnabled>k__BackingField: 0
-  <HostMigrationSnapshotDelay>k__BackingField: 0
-  <GameMode>k__BackingField: 0
-  _tempWordsCapacity: 0
 --- !u!4 &870813767
 Transform:
   m_ObjectHideFlags: 0
