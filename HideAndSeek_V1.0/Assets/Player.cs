@@ -10,6 +10,9 @@ public class Player : NetworkBehaviour, IPlayerLeft
     //Player Variables
     public static Player Local { get; set; }
     private NetworkCharacterControllerPrototype nccp;
+    private Transform playerModel;
+    private PlayerModelRotation playerModelRotation;
+    private Transform cameraPosition;
     
     //Control Variables
     public float playerSpeed;
@@ -28,19 +31,25 @@ public class Player : NetworkBehaviour, IPlayerLeft
     {
         //Character Controller
         nccp = gameObject.GetComponent<NetworkCharacterControllerPrototype>();
+        playerModel = gameObject.transform.Find("Model");
         
         //Camera
         localCamera = gameObject.GetComponentInChildren<Camera>();
+        cameraPosition = gameObject.transform.Find("CamPos");
+        playerModelRotation = gameObject.GetComponentInChildren<PlayerModelRotation>();
         cmv = gameObject.GetComponentInChildren<CinemachineVirtualCamera>();
     }
 
     private void LateUpdate()
     {
-
+        
     }
     
     public override void FixedUpdateNetwork()
     {
+        if (!localCamera.enabled)
+            return;
+
         if (GetInput(out NetworkInputData data))
         {
             //Movement
@@ -57,8 +66,6 @@ public class Player : NetworkBehaviour, IPlayerLeft
             
             //Get View Input
             viewInput = data.rotationDir;
-            
-            nccp.Rotate(viewInput, cameraRelativeMovement, cameraTransform);
             
             //Jump
             if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
@@ -104,5 +111,10 @@ public class Player : NetworkBehaviour, IPlayerLeft
         {
             Runner.Despawn(Object);
         }
+    }
+
+    public Camera GetCamera()
+    {
+        return localCamera;
     }
 }

@@ -127,58 +127,5 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
     Velocity   = (transform.position - previousPos) * Runner.Simulation.Config.TickRate;
     IsGrounded = Controller.isGrounded;
   }
-
-  public void Rotate(Vector3 viewInput, Vector3 input, Transform cameraTransform)
-  { 
-    //Horizontal, Vertical Input
-    float vertical = input.z;
-    float horizontal = input.x;
-    
-    // Get camera forward direction, without vertical component.
-    Vector3 forward = cameraTransform.TransformDirection(Vector3.forward);
-
-    // Player is moving on ground, Y component of camera facing is not relevant.
-    forward.y = 0.0f;
-    forward = forward.normalized;
-
-    // Calculate target direction based on camera forward and direction key.
-    Vector3 right = new Vector3(forward.z, 0, -forward.x);
-    Vector3 targetDirection = forward * vertical + right * horizontal *-1;
-
-    // Lerp current direction to calculated target direction.
-    if ((IsMoving(horizontal, vertical) && targetDirection != Vector3.zero))
-    {
-      Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-
-      Quaternion newRotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSmoothing);
-      playerModel.rotation = Quaternion.Lerp(targetRotation, newRotation, turnSmoothing * Runner.DeltaTime);
-      SetLastDirection(targetDirection);
-    }
-    // If idle, Ignore current camera facing and consider last moving direction.
-    if (!(Mathf.Abs(horizontal) > 0.9 || Mathf.Abs(vertical) > 0.9))
-    {
-      Repositioning();
-    }
-  }
   
-  private void Repositioning()
-  {
-    if(lastDirection != Vector3.zero)
-    {
-      lastDirection.y = 0;
-      Quaternion targetRotation = Quaternion.LookRotation (lastDirection);
-      Quaternion newRotation = Quaternion.Slerp(transform.rotation, targetRotation, turnSmoothing);
-      playerModel.rotation = Quaternion.Lerp(targetRotation, newRotation, turnSmoothing * Runner.DeltaTime);
-    }
-  }
-  
-  public void SetLastDirection(Vector3 direction)
-  {
-    lastDirection = direction;
-  }
-
-  private bool IsMoving(float h, float v)
-  {
-    return (h != 0)|| (v != 0);
-  }
 }
