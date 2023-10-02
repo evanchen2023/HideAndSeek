@@ -51,24 +51,31 @@ public class Player : NetworkBehaviour, IPlayerLeft
             return;
 
         if (GetInput(out NetworkInputData data))
-        {
-            //Movement
-            var cameraTransform = localCamera.transform;
-            Vector3 forward = cameraTransform.forward;
-            Vector3 right = cameraTransform.right;
+        {   
+            //Camera Transform
+            Transform cameraTransform = localCamera.transform;
+
+            //Get Relative Movement
+            Vector3 cameraRelativeMovement = PlayerRelativeMovement(cameraTransform, data);
+
+            //Set Rotation
+            PlayerRotate(cameraTransform, data);
             
-            //Get Relative Movement Vectors
+            //Jump
+            if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
+            {
+                nccp.Jump();
+            }
+
+            //Move
+            nccp.Move(playerSpeed*cameraRelativeMovement * Runner.DeltaTime);
+        }
+    }
+
+    private void PlayerRotate(Transform cameraTransform, NetworkInputData data)
+    {
             float verticalInput = data.direction.z;
             float horizontalInput = data.direction.x;
-            Vector3 forwardRelativeVerticalInput = data.direction.z * forward;
-            Vector3 rightRelativeVerticalInput = data.direction.x * right;
-            
-            //Get Movement
-            Vector3 cameraRelativeMovement = forwardRelativeVerticalInput + rightRelativeVerticalInput;
-            
-            //Get View Input
-            viewInput = data.rotationDir;
-
             Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
 
             movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) *
@@ -81,15 +88,20 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 transform.rotation =
                     Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Runner.DeltaTime);
             }
+    }
+
+    private Vector3 PlayerRelativeMovement(Transform cameraTransform, NetworkInputData data)
+    {
+            //Movement
+            Vector3 forward = cameraTransform.forward;
+            Vector3 right = cameraTransform.right;
             
-            //Jump
-            if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
-            {
-                nccp.Jump();
-            }
-            //Move
-            nccp.Move(playerSpeed*cameraRelativeMovement * Runner.DeltaTime);
-        }
+            //Get Relative Movement Vectors
+            Vector3 forwardRelativeVerticalInput = data.direction.z * forward;
+            Vector3 rightRelativeVerticalInput = data.direction.x * right;
+            
+            //Get Movement
+            return forwardRelativeVerticalInput + rightRelativeVerticalInput;
     }
 
     public override void Spawned()
@@ -109,12 +121,19 @@ public class Player : NetworkBehaviour, IPlayerLeft
         }
         else
         {
+            //Disable Other Cameras
             localCamera.enabled = false;
             cmv.enabled = false;
             
             //Only 1 Audio Listener - When Implement
             AudioListener audioListener = GetComponentInChildren<AudioListener>();
             audioListener.enabled = false;
+
+            //Remove CinemachineBrain
+            CinemachineBrain cmb = localCamera.GetComponent<CinemachineBrain>();
+            cmb.enabled = false;
+
+            nccp.enabled = false;
             
             Debug.Log("Spawned Remote Player");
         }
