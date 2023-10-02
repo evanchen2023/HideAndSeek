@@ -21,7 +21,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
   public float braking       = 50.0f;
   public float maxSpeed      = 2.0f;
   public float rotationSpeed = 15.0f;
-  public float turnSmoothing = 0.06f;
+  public float turningSpeed = 20f;
 
   [Networked]
   [HideInInspector]
@@ -126,6 +126,12 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
 
     Velocity   = (transform.position - previousPos) * Runner.Simulation.Config.TickRate;
     IsGrounded = Controller.isGrounded;
+  }
+
+  public virtual void Rotate(Vector2 viewInput, Transform camTransform)
+  {
+    this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation,
+      camTransform.rotation, turningSpeed * Runner.DeltaTime);
   }
   
 }

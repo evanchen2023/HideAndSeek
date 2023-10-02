@@ -17,7 +17,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
     //Control Variables
     public float playerSpeed;
     public float jumpSpeed;
-    public float viewSpeed;
+    public float rotationSpeed;
     private Vector3 moveVelocity;
     
     //Camera
@@ -25,7 +25,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
     private float camRotateX;
     private float camRotateY;
     private Camera localCamera;
-    private CinemachineVirtualCamera cmv;
+    private CinemachineFreeLook cmv;
     
     void Awake()
     {
@@ -37,7 +37,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
         localCamera = gameObject.GetComponentInChildren<Camera>();
         cameraPosition = gameObject.transform.Find("CamPos");
         playerModelRotation = gameObject.GetComponentInChildren<PlayerModelRotation>();
-        cmv = gameObject.GetComponentInChildren<CinemachineVirtualCamera>();
+        cmv = gameObject.GetComponentInChildren<CinemachineFreeLook>();
     }
 
     private void LateUpdate()
@@ -58,6 +58,8 @@ public class Player : NetworkBehaviour, IPlayerLeft
             Vector3 right = cameraTransform.right;
             
             //Get Relative Movement Vectors
+            float verticalInput = data.direction.z;
+            float horizontalInput = data.direction.x;
             Vector3 forwardRelativeVerticalInput = data.direction.z * forward;
             Vector3 rightRelativeVerticalInput = data.direction.x * right;
             
@@ -66,6 +68,19 @@ public class Player : NetworkBehaviour, IPlayerLeft
             
             //Get View Input
             viewInput = data.rotationDir;
+
+            Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
+
+            movementDirection = Quaternion.AngleAxis(cameraTransform.rotation.eulerAngles.y, Vector3.up) *
+                                movementDirection;
+            movementDirection.Normalize();
+
+            if (movementDirection != Vector3.zero)
+            {
+                Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+                transform.rotation =
+                    Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Runner.DeltaTime);
+            }
             
             //Jump
             if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
