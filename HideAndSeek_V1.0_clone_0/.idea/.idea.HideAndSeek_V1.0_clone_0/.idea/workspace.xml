@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fbc94bed-b417-418f-b040-7a2aa221a943" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/NetworkSpawner.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/NetworkSpawner.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/Photon/Fusion/Scripts/Prototyping/NetworkCharacterControllerPrototype.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/Photon/Fusion/Scripts/Prototyping/NetworkCharacterControllerPrototype.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/Player.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/PlayerModelRotation.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/PlayerModelRotation.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/Prefab/Player/PlayerPrefab.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/Prefab/Player/PlayerPrefab.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/Scenes/New_Multiplayer.unity" beforeDir="false" afterPath="$PROJECT_DIR$/../HideAndSeek_V1.0/Assets/Scenes/New_Multiplayer.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HideAndSeek_V1.0/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/../HideAndSeek_V1.0/ProjectSettings/TagManager.asset" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="2WHexK57X8ny5mZ8R8PCeF0s5KH" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\nemia\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\nemia\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\nemia\\AppData\\Local\\Symbols\\src"
+    ]
+  }
+}]]></component>
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../HideAndSeek_V1.0/Builds/HideAndSeek_V1.0.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\nemia\Desktop\Desktop\Unity\Project\HideAndSeek\HideAndSeek\HideAndSeek\HideAndSeek_V1.0\Builds" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2021.3.3f1\Editor\Unity.exe" />
+      <option name="PROGRAM_PARAMETERS" value="-projectPath C:\Users\nemia\Desktop\Desktop\Unity\Project\HideAndSeek\HideAndSeek\HideAndSeek\HideAndSeek_V1.0_clone_0 -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\nemia\Desktop\Desktop\Unity\Project\HideAndSeek\HideAndSeek\HideAndSeek\HideAndSeek_V1.0_clone_0" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2021.3.3f1\Editor\Unity.exe" />
+      <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath C:\Users\nemia\Desktop\Desktop\Unity\Project\HideAndSeek\HideAndSeek\HideAndSeek\HideAndSeek_V1.0_clone_0 -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\nemia\Desktop\Desktop\Unity\Project\HideAndSeek\HideAndSeek\HideAndSeek\HideAndSeek_V1.0_clone_0" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fbc94bed-b417-418f-b040-7a2aa221a943" name="Changes" comment="" />
+      <created>1696394177998</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1696394177998</updated>
+      <workItem from="1696394179221" duration="82000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>
