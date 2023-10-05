@@ -83,6 +83,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
       var newVel = Velocity;
       newVel.y += overrideImpulse ?? jumpImpulse;
       Velocity =  newVel;
+      
     }
   }
 

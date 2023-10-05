@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: -3670738341161330341}
   - component: {fileID: -8419998552225482450}
   - component: {fileID: 2629980346050216620}
+  - component: {fileID: 8533439211021349062}
+  - component: {fileID: -5060055384627285106}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Player
@@ -60,6 +62,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: -3670738341161330341}
   - {fileID: 2629980346050216620}
+  - {fileID: -5060055384627285106}
   SimulationBehaviours: []
 --- !u!114 &-3670738341161330341
 MonoBehaviour:
@@ -75,9 +78,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   playerSpeed: 15
-  jumpSpeed: 1
-  rotationSpeed: 500
   lookSensitivity: 135
+  initialized: 0
 --- !u!143 &-8419998552225482450
 CharacterController:
   m_ObjectHideFlags: 0
@@ -132,6 +134,56 @@ MonoBehaviour:
   rotationSpeed: 500
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
+--- !u!95 &8533439211021349062
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4515667473665738065}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 7d28a0e9cf3ef26468d8ca63550fecbb, type: 3}
+  m_Controller: {fileID: 9100000, guid: 8ea60b14b65774f45a8c37d8b01ba818, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-5060055384627285106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4515667473665738065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 506319458, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  Animator: {fileID: 8533439211021349062}
+  TotalWords: 2
+  SyncSettings: 79
+  FloatAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  TimeAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: 1061325578
+  WeightAccuracy:
+    _value: 0
+    _inverse: 0
+    _hash: -814817977
+  StateHashes: 000000008a18fce4b9abd9d32638cb43a21b1dac
+  TriggerHashes: 00000000
 --- !u!1001 &4515667473213313302
 PrefabInstance:
   m_ObjectHideFlags: 0

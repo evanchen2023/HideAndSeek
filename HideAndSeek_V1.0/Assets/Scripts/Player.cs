@@ -17,8 +17,6 @@ public class Player : NetworkBehaviour, IPlayerLeft
     
     //Camera
     private Vector2 viewInput;
-    private float camRotateX;
-    private float camRotateY;
     private Camera localCamera;
     private Transform localCameraTransform;
     private const int MAX_ANGLE = 360;
@@ -28,7 +26,12 @@ public class Player : NetworkBehaviour, IPlayerLeft
     private NetworkObject networkCamera;
     private PlayerCamera cameraInput;
     [SerializeField] private bool initialized = false;
-    
+
+    //Animator
+    Animator animator;
+    NetworkMecanimAnimator networkMecanimAnimator;
+    private bool jumping;
+
     public Vector3 LookEuler
     {
         get => lookEuler;
@@ -44,6 +47,9 @@ public class Player : NetworkBehaviour, IPlayerLeft
     {
         //Character Controller
         nccp = gameObject.GetComponent<NetworkCharacterControllerPrototype>();
+        animator = gameObject.GetComponent<Animator>();
+        networkMecanimAnimator = gameObject.GetComponent<NetworkMecanimAnimator>();
+        jumping = false;
     }
 
     private Vector3 PlayerRelativeMovement(NetworkInputData data)
@@ -90,6 +96,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
             if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
             {
                 nccp.Jump();
+                jumping = true;
             }
 
             //Move
@@ -99,12 +106,28 @@ public class Player : NetworkBehaviour, IPlayerLeft
         }
     }
 
+    public override void Render()
+    {
+        //Jump Animation
+        if (jumping)
+        {
+            networkMecanimAnimator.Animator.SetBool("IsJump", true);
+        }
+        else 
+        {
+            networkMecanimAnimator.Animator.SetBool("IsJump", false);
+        }
+        jumping = false;
+    }
+
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
         {
             Local = this;
         }
+
+        jumping = false;
     }
 
     public void PlayerLeft(PlayerRef player)
