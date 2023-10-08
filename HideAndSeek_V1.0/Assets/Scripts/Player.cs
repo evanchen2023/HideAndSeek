@@ -13,6 +13,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
     
     //Control Variables
     public float playerSpeed;
+    public float sprintSpeed;
     private Vector3 moveVelocity;
     
     //Camera
@@ -106,16 +107,21 @@ public class Player : NetworkBehaviour, IPlayerLeft
                     nccp.Jump();
                     jumping = true;
                 }
+                
+                //Sprint
+                float moveSpeed = data.sprintButton ? sprintSpeed : playerSpeed;
 
                 //Move
                 //Relative Movement
                 Vector3 cameraRelativeMovement = PlayerRelativeMovement(data);
-                nccp.Move(playerSpeed*cameraRelativeMovement * Runner.DeltaTime);
-            
-                //Animation
+                nccp.Move(cameraRelativeMovement * Runner.DeltaTime, data.sprintButton);
+                
                 //Movement Animation
                 inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
-                inputMagnitude /= 2;
+                if (!data.sprintButton)
+                {
+                    inputMagnitude /= 2;
+                }
             }
         }
         //Jump Animation

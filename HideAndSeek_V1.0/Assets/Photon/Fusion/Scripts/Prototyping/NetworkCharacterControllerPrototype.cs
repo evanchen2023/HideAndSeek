@@ -20,6 +20,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
   public float acceleration  = 5.0f;
   public float braking       = 50.0f;
   public float maxSpeed      = 2.0f;
+  public float sprintSpeed = 5.0f;
   public float rotationSpeed = 500.0f;
 
   [Networked]
@@ -90,6 +91,49 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
   /// Basic implementation of a character controller's movement function based on an intended direction.
   /// <param name="direction">Intended movement direction, subject to movement query, acceleration and max speed values.</param>
   /// </summary>
+  public virtual void Move(Vector3 direction, bool sprinting) {
+    var deltaTime    = Runner.DeltaTime;
+    var previousPos  = transform.position;
+    var moveVelocity = Velocity;
+
+    direction = direction.normalized;
+
+    if (IsGrounded && moveVelocity.y < 0) {
+      moveVelocity.y = 0f;
+    }
+
+    float moveSpeed = sprinting ? sprintSpeed : maxSpeed;
+
+    moveVelocity.y += gravity * Runner.DeltaTime;
+
+    var horizontalVel = default(Vector3);
+    horizontalVel.x = moveVelocity.x;
+    horizontalVel.z = moveVelocity.z;
+
+    if (direction == default) {
+      horizontalVel = Vector3.Lerp(horizontalVel, default, braking * deltaTime);
+    } else {
+      horizontalVel      = Vector3.ClampMagnitude(horizontalVel + direction * acceleration * deltaTime, moveSpeed);
+      //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), rotationSpeed * Runner.DeltaTime);
+    }
+
+    moveVelocity.x = horizontalVel.x;
+    moveVelocity.z = horizontalVel.z;
+
+    Controller.Move(moveVelocity * deltaTime);
+
+    Velocity   = (transform.position - previousPos) * Runner.Simulation.Config.TickRate;
+    IsGrounded = Controller.isGrounded;
+  }
+  
+  public virtual void Rotate(Vector3 movementDirection)
+  {
+    Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
+    transform.rotation =
+      Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Runner.DeltaTime);
+  }
+  
+  //Archive Code for Prototype
   public virtual void Move(Vector3 direction) {
     var deltaTime    = Runner.DeltaTime;
     var previousPos  = transform.position;
@@ -122,12 +166,4 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
     Velocity   = (transform.position - previousPos) * Runner.Simulation.Config.TickRate;
     IsGrounded = Controller.isGrounded;
   }
-
-  public virtual void Rotate(Vector3 movementDirection)
-  {
-    Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-    transform.rotation =
-      Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Runner.DeltaTime);
-  }
-
 }

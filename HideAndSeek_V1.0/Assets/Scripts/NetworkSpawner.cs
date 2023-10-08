@@ -85,6 +85,10 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             
             Debug.Log(player.PlayerId + " Joined.");
         }
+        
+        // //Set Cursor
+        // Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -106,10 +110,12 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     //Controls
     private bool jumpButton;
+    private bool sprintButton;
 
     void Update()
     {
         jumpButton = jumpButton | Input.GetKeyDown(KeyCode.Space);
+        sprintButton = sprintButton | Input.GetKey(KeyCode.LeftShift);
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -124,9 +130,12 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             data.buttons |= NetworkInputData.JUMPBUTTON;
         }
+        
+        data.sprintButton = sprintButton;
 
         jumpButton = false;
-
+        sprintButton = false;
+        
         input.Set(data);
     }
 
