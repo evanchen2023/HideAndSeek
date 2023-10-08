@@ -83,7 +83,6 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
       var newVel = Velocity;
       newVel.y += overrideImpulse ?? jumpImpulse;
       Velocity =  newVel;
-      
     }
   }
 
@@ -130,5 +129,5 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
     transform.rotation =
       Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Runner.DeltaTime);
   }
-  
+
 }
