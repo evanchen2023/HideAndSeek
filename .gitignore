@@ -71,5 +71,4 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-#Clone
-HideAndSeek_V1.0_clone_0/
+*_clone_[0-9]*/

@@ -17,8 +17,6 @@ public class Player : NetworkBehaviour, IPlayerLeft
     
     //Camera
     private Vector2 viewInput;
-    private float camRotateX;
-    private float camRotateY;
     private Camera localCamera;
     private Transform localCameraTransform;
     private const int MAX_ANGLE = 360;
@@ -28,7 +26,13 @@ public class Player : NetworkBehaviour, IPlayerLeft
     private NetworkObject networkCamera;
     private PlayerCamera cameraInput;
     [SerializeField] private bool initialized = false;
-    
+
+    //Animator
+    Animator animator;
+    //NetworkMecanimAnimator networkMecanimAnimator;
+    private bool jumping = false;
+    private float inputMagnitude = 0;
+
     public Vector3 LookEuler
     {
         get => lookEuler;
@@ -44,6 +48,13 @@ public class Player : NetworkBehaviour, IPlayerLeft
     {
         //Character Controller
         nccp = gameObject.GetComponent<NetworkCharacterControllerPrototype>();
+        animator = gameObject.GetComponent<NetworkMecanimAnimator>().Animator;
+        // networkMecanimAnimator = gameObject.GetComponent<NetworkMecanimAnimator>();
+        //
+        // if (networkMecanimAnimator.Animator == null)
+        // {
+        //     networkMecanimAnimator.Animator = animator;
+        // }
     }
 
     private Vector3 PlayerRelativeMovement(NetworkInputData data)
@@ -59,44 +70,61 @@ public class Player : NetworkBehaviour, IPlayerLeft
         //Get Movement
         return forwardRelativeVerticalInput + rightRelativeVerticalInput;
     }
-
+    
     public override void FixedUpdateNetwork()
     {
-        if (!initialized)
+        if (Runner.IsForward == false)
             return;
-
-        if (GetInput(out NetworkInputData data))
+        
+        if (initialized)
         {
-            //Input
-            float verticalInput = data.direction.z;
-            float horizontalInput = data.direction.x;
-            Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
-            
-            cameraInput.CameraUpdate();
-            movementDirection = Quaternion.AngleAxis(localCameraTransform.rotation.eulerAngles.y, Vector3.up) *
-                                movementDirection;
-            movementDirection.Normalize();
-            
-            if (movementDirection != Vector3.zero)
+            if (GetInput(out NetworkInputData data))
             {
-                nccp.Rotate(movementDirection);
-            }
+                //Input
+                float verticalInput = data.direction.z;
+                float horizontalInput = data.direction.x;
+                Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
             
-            //Camera
-            lookEuler += Runner.DeltaTime * lookSensitivity *
-                         new Vector3(data.rotationDir.y, data.rotationDir.x, 0);
-            
-            //Jump
-            if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
-            {
-                nccp.Jump();
-            }
+                cameraInput.CameraUpdate();
 
-            //Move
-            //Relative Movement
-            Vector3 cameraRelativeMovement = PlayerRelativeMovement(data);
-            nccp.Move(playerSpeed*cameraRelativeMovement * Runner.DeltaTime);
+                movementDirection = Quaternion.AngleAxis(localCameraTransform.rotation.eulerAngles.y, Vector3.up) *
+                                    movementDirection;
+                movementDirection.Normalize();
+            
+                if (movementDirection != Vector3.zero)
+                {
+                    nccp.Rotate(movementDirection);
+                }
+            
+                //Camera
+                lookEuler += Runner.DeltaTime * lookSensitivity *
+                             new Vector3(data.rotationDir.y, data.rotationDir.x, 0);
+            
+                //Jump
+                if ((data.buttons & NetworkInputData.JUMPBUTTON) != 0)
+                {
+                    nccp.Jump();
+                    jumping = true;
+                }
+
+                //Move
+                //Relative Movement
+                Vector3 cameraRelativeMovement = PlayerRelativeMovement(data);
+                nccp.Move(playerSpeed*cameraRelativeMovement * Runner.DeltaTime);
+            
+                //Animation
+                //Movement Animation
+                inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+                inputMagnitude /= 2;
+            }
         }
+        //Jump Animation
+        animator.SetBool("IsJump", jumping);
+        //Debug.Log("Jump Bool : " + animator.GetBool("IsJump") + " NCCP Jump Bool : " + nccp.GetJumpBool());
+        jumping = false;
+        
+        //Running Animation
+        animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Runner.DeltaTime);
     }
 
     public override void Spawned()

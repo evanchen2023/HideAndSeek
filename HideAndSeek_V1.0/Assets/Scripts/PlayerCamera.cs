@@ -28,16 +28,38 @@ public class PlayerCamera : NetworkTransform
         localCamera = GetComponent<Camera>();
     }
 
-    void Update()
-    {
-
-    }
-    
     public override void Spawned()
     {
         if (Object.HasInputAuthority)
         {
             //Enable Camera
+            var playerList = GameObject.FindGameObjectsWithTag("Player");
+
+            for (int i = 0; i < playerList.Length; i++)
+            {
+                if (playerList[i].GetComponent<NetworkObject>().HasInputAuthority)
+                {
+                    player = playerList[i].GetComponent<NetworkObject>();
+                    Debug.Log("Player Found : " + player);
+                }
+            }
+
+            if (player)
+            {
+                follow = player.transform;
+                playerInput = player.GetComponent<Player>();
+        
+                //Set Follow
+                originTransform = follow.localToWorldMatrix;
+                back = originTransform.MultiplyVector(Vector3.back);
+                right = originTransform.MultiplyVector(Vector3.right);
+        
+                playerInput.SetLocalCamera(Object);
+        
+                Debug.Log("Camera : Added Follow");
+                initialized = true;
+            }
+            
             localCamera.enabled = true;
             localCamera.GetComponent<AudioListener>().enabled = true;
         }

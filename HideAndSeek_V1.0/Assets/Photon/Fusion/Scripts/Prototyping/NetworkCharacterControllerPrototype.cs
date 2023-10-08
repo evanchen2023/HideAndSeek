@@ -129,5 +129,5 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
     transform.rotation =
       Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Runner.DeltaTime);
   }
-  
+
 }
