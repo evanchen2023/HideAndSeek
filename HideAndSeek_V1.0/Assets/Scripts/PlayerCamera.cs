@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon.StructWrapping;
@@ -23,11 +24,22 @@ public class PlayerCamera : NetworkTransform
 
     [SerializeField] private bool initialized = false;
     private Camera localCamera;
+    
+    //Camera Collision
+    private Vector2 cameraDistanceMinMax;
+    private float camDistance;
     protected override void Awake()
     {
         //Get Local Player Input Script
         localCamera = GetComponent<Camera>();
+        cameraDistanceMinMax = new Vector2(0.1f,distance);
+        camDistance = cameraDistanceMinMax.y;
     }
+
+    // public override void FixedUpdateNetwork()
+    // {
+    //     
+    // }
 
     public override void Spawned()
     {
@@ -110,4 +122,5 @@ public class PlayerCamera : NetworkTransform
         Debug.Log("Camera : Added Follow");
         initialized = true;
     }
+    
 }

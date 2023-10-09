@@ -7,6 +7,7 @@ using Fusion.Photon.Realtime;
 using Fusion.Sockets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 {
@@ -15,7 +16,8 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private INetworkSceneManager sceneManager;
     private Dictionary<PlayerRef, NetworkObject> playersList = new Dictionary<PlayerRef, NetworkObject>();
     private Dictionary<PlayerRef, NetworkObject> cameraList = new Dictionary<PlayerRef, NetworkObject>();
-    
+    private List<NetworkObject> spawnList = new List<NetworkObject>();
+
     //Player Settings
     [SerializeField] private NetworkPrefabRef playerPrefab;
     [SerializeField] private NetworkPrefabRef cameraPrefab;
@@ -74,12 +76,18 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (runner.IsServer)
         {
+            //Get Spawns
+            spawnList = GetSpawnList();
+            int spawnIndex = Random.Range(0, spawnList.Count - 1);
+            Vector3 spawnPoint = spawnList[spawnIndex].transform.position;
+            RemoveSpawnPoint(spawnIndex);
+            
             //Add Camera
-            NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, new Vector3(0, 2, 0), Quaternion.identity, player);
+            NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, spawnPoint, Quaternion.identity, player);
             cameraList.Add(player, networkPlayerCamera);
             
             //Add Player
-            NetworkObject networkPlayerObject = runner.Spawn(playerPrefab, new Vector3(0, 2, 0), Quaternion.identity, player);
+            NetworkObject networkPlayerObject = runner.Spawn(playerPrefab, spawnPoint, Quaternion.identity, player);
             playersList.Add(player, networkPlayerObject);
             
             networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
@@ -114,6 +122,28 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             runner.Despawn(cameraObject);
             cameraList.Remove(player);
             Debug.Log(player.PlayerId + " Left.");
+        }
+    }
+
+    private List<NetworkObject> GetSpawnList()
+    {
+        List<NetworkObject> returnList = new List<NetworkObject>();
+        var spawns = GameObject.FindGameObjectsWithTag("SeekerSpawn");
+
+        for (int i = 0; i < spawns.Length; i++)
+        {
+            returnList.Add(spawns[i].GetComponent<NetworkObject>());
+        }
+
+        return returnList;
+    }
+
+    private void RemoveSpawnPoint(int spawnIndex)
+    {
+        if (spawnList[spawnIndex] != null)
+        {
+            runner.Despawn(spawnList[spawnIndex]);
+            spawnList.RemoveAt(spawnIndex);
         }
     }
 
