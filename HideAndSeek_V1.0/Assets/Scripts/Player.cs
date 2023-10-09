@@ -27,6 +27,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
     Animator animator;
     //NetworkMecanimAnimator networkMecanimAnimator;
     private bool jumping = false;
+    private bool throwing = false;
     private float inputMagnitude = 0;
 
     public Vector3 LookEuler
@@ -82,11 +83,19 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
                 Vector3 movementMagnitude = movementDirection;
                 
-                //Aiming
+                //Set Direction if Aiming
                 if (data.aimButton)
                 {
                     movementDirection = new Vector3(0, 0, 1);
+                    
+                    //Shooting
+                    if ((data.shootButtons & NetworkInputData.SHOOTBUTTON) != 0)
+                    {
+                        throwing = true;
+                    }
                 }
+                
+                //Update Camera and Movement Rotation
                 cameraInput.CameraUpdate(data.aimButton);
                 movementDirection = Quaternion.AngleAxis(localCameraTransform.rotation.eulerAngles.y, Vector3.up) *
                                     movementDirection;
@@ -97,7 +106,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
                     nccp.Rotate(movementDirection);
                 }
 
-                //Camera
+                //Update for Camera
                 lookEuler += Runner.DeltaTime * lookSensitivity *
                              new Vector3(data.rotationDir.y, data.rotationDir.x, 0);
             
@@ -123,8 +132,11 @@ public class Player : NetworkBehaviour, IPlayerLeft
         }
         //Jump Animation
         animator.SetBool("IsJump", jumping);
-        //Debug.Log("Jump Bool : " + animator.GetBool("IsJump") + " NCCP Jump Bool : " + nccp.GetJumpBool());
         jumping = false;
+     
+        //Shooting Animation
+        animator.SetBool("IsThrow", throwing);
+        throwing = false;
         
         //Running Animation
         animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Runner.DeltaTime);

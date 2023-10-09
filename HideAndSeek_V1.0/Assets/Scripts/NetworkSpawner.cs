@@ -120,12 +120,14 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     //Controls
     private bool jumpButton;
     private bool sprintButton;
+    private bool shootButton;
     private bool aimButton;
     
     void Update()
     {
         jumpButton = jumpButton | Input.GetKeyDown(KeyCode.Space);
         sprintButton = sprintButton | Input.GetKey(KeyCode.LeftShift);
+        shootButton = shootButton | Input.GetMouseButtonDown(0);
         aimButton = aimButton | Input.GetMouseButton(1);
     }
 
@@ -141,13 +143,21 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         {
             data.buttons |= NetworkInputData.JUMPBUTTON;
         }
-        
+
+        if (shootButton)
+        {
+            data.shootButtons |= NetworkInputData.SHOOTBUTTON;
+        }
+
+            //Get Toggle Buttons
         data.sprintButton = sprintButton;
         data.aimButton = aimButton;
 
+        //Set Controls False
         jumpButton = false;
         sprintButton = false;
         aimButton = false;
+        shootButton = false;
         
         input.Set(data);
     }

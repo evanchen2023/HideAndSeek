@@ -77,8 +77,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  playerSpeed: 35
-  sprintSpeed: 100
   lookSensitivity: 135
   initialized: 0
 --- !u!143 &-8419998552225482450
@@ -132,6 +130,7 @@ MonoBehaviour:
   acceleration: 10
   braking: 10
   maxSpeed: 2
+  sprintSpeed: 5
   rotationSpeed: 500
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
@@ -183,7 +182,7 @@ MonoBehaviour:
     _value: 0
     _inverse: 0
     _hash: -814817977
-  StateHashes: 000000008a18fce4b9abd9d32638cb43a21b1dac
+  StateHashes: 000000008a18fce4b9abd9d32638cb43a21b1dacd9b6d9c8c327e322
   TriggerHashes: 00000000
 --- !u!1001 &4515667473213313302
 PrefabInstance:
