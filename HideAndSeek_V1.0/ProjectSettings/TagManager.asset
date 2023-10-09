@@ -9,6 +9,7 @@ TagManager:
   - PlayerModel
   - CameraPosition
   - PlayerCamera
+  - SeekerSpawn
   layers:
   - Default
   - TransparentFX

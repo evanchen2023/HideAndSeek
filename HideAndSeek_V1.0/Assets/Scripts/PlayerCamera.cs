@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using ExitGames.Client.Photon.StructWrapping;
@@ -8,6 +9,7 @@ public class PlayerCamera : NetworkTransform
 {
     [SerializeField] private Transform follow;
     [SerializeField] private Vector3 standOffset = new(0.3f, 1.6f, -3f);
+    [SerializeField] private Vector3 aimOffset = new(1.3f, 1.6f, -1.2f);
     [SerializeField] private float distance = 0.1f;
     [SerializeField] private float turnRate = 510f;
 
@@ -22,11 +24,22 @@ public class PlayerCamera : NetworkTransform
 
     [SerializeField] private bool initialized = false;
     private Camera localCamera;
+    
+    //Camera Collision
+    private Vector2 cameraDistanceMinMax;
+    private float camDistance;
     protected override void Awake()
     {
         //Get Local Player Input Script
         localCamera = GetComponent<Camera>();
+        cameraDistanceMinMax = new Vector2(0.1f,distance);
+        camDistance = cameraDistanceMinMax.y;
     }
+
+    // public override void FixedUpdateNetwork()
+    // {
+    //     
+    // }
 
     public override void Spawned()
     {
@@ -66,7 +79,7 @@ public class PlayerCamera : NetworkTransform
     }
 
     // Update is called once per frame
-    public virtual void CameraUpdate()
+    public virtual void CameraUpdate(bool aimButton)
     {
         if (initialized)
         {
@@ -79,7 +92,9 @@ public class PlayerCamera : NetworkTransform
                 rotX, Quaternion.AngleAxis(pitch, right),
                 Runner.DeltaTime * turnRate);
 
-            Vector3 offset = standOffset;
+            Vector3 offset; //= standOffset;
+
+            offset = aimButton ? aimOffset : standOffset;
 
             var shoulderOffset = rotY * originTransform.MultiplyVector(offset);
             var armOffset = rotY * (rotX * (distance * back));
@@ -107,4 +122,5 @@ public class PlayerCamera : NetworkTransform
         Debug.Log("Camera : Added Follow");
         initialized = true;
     }
+    
 }

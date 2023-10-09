@@ -130,7 +130,7 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
   {
     Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
     transform.rotation =
-      Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Runner.DeltaTime);
+        Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Runner.DeltaTime);
   }
   
   //Archive Code for Prototype
