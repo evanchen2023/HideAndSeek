@@ -10,12 +10,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
     //Player Variables
     public static Player Local { get; set; }
     private NetworkCharacterControllerPrototype nccp;
-    
-    //Control Variables
-    public float playerSpeed;
-    public float sprintSpeed;
-    private Vector3 moveVelocity;
-    
+
     //Camera
     private Vector2 viewInput;
     private Camera localCamera;
@@ -85,18 +80,23 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 float verticalInput = data.direction.z;
                 float horizontalInput = data.direction.x;
                 Vector3 movementDirection = new Vector3(horizontalInput, 0, verticalInput);
-            
-                cameraInput.CameraUpdate();
-
+                Vector3 movementMagnitude = movementDirection;
+                
+                //Aiming
+                if (data.aimButton)
+                {
+                    movementDirection = new Vector3(0, 0, 1);
+                }
+                cameraInput.CameraUpdate(data.aimButton);
                 movementDirection = Quaternion.AngleAxis(localCameraTransform.rotation.eulerAngles.y, Vector3.up) *
                                     movementDirection;
                 movementDirection.Normalize();
-            
+
                 if (movementDirection != Vector3.zero)
                 {
                     nccp.Rotate(movementDirection);
                 }
-            
+
                 //Camera
                 lookEuler += Runner.DeltaTime * lookSensitivity *
                              new Vector3(data.rotationDir.y, data.rotationDir.x, 0);
@@ -107,9 +107,6 @@ public class Player : NetworkBehaviour, IPlayerLeft
                     nccp.Jump();
                     jumping = true;
                 }
-                
-                //Sprint
-                float moveSpeed = data.sprintButton ? sprintSpeed : playerSpeed;
 
                 //Move
                 //Relative Movement
@@ -117,7 +114,7 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 nccp.Move(cameraRelativeMovement * Runner.DeltaTime, data.sprintButton);
                 
                 //Movement Animation
-                inputMagnitude = Mathf.Clamp01(movementDirection.magnitude);
+                inputMagnitude = Mathf.Clamp01(movementMagnitude.magnitude);
                 if (!data.sprintButton)
                 {
                     inputMagnitude /= 2;

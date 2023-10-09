@@ -395,7 +395,8 @@ MonoBehaviour:
     RawGuidValue: 77062f61985b73b4b83f53c86fa31413
   cameraPrefab:
     RawGuidValue: 02f5fb2d8763a9147a4c8f94d11287b2
-  connectOnAwake: 0
+  propPrefab:
+    RawGuidValue: e22dcac6dc635d94ebfb4d2d965e13bd
 --- !u!4 &1361603273
 Transform:
   m_ObjectHideFlags: 0

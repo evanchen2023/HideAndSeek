@@ -8,6 +8,7 @@ public class PlayerCamera : NetworkTransform
 {
     [SerializeField] private Transform follow;
     [SerializeField] private Vector3 standOffset = new(0.3f, 1.6f, -3f);
+    [SerializeField] private Vector3 aimOffset = new(1.3f, 1.6f, -1.2f);
     [SerializeField] private float distance = 0.1f;
     [SerializeField] private float turnRate = 510f;
 
@@ -66,7 +67,7 @@ public class PlayerCamera : NetworkTransform
     }
 
     // Update is called once per frame
-    public virtual void CameraUpdate()
+    public virtual void CameraUpdate(bool aimButton)
     {
         if (initialized)
         {
@@ -79,7 +80,9 @@ public class PlayerCamera : NetworkTransform
                 rotX, Quaternion.AngleAxis(pitch, right),
                 Runner.DeltaTime * turnRate);
 
-            Vector3 offset = standOffset;
+            Vector3 offset; //= standOffset;
+
+            offset = aimButton ? aimOffset : standOffset;
 
             var shoulderOffset = rotY * originTransform.MultiplyVector(offset);
             var armOffset = rotY * (rotX * (distance * back));

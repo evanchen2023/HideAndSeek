@@ -19,6 +19,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     //Player Settings
     [SerializeField] private NetworkPrefabRef playerPrefab;
     [SerializeField] private NetworkPrefabRef cameraPrefab;
+    [SerializeField] private NetworkPrefabRef propPrefab;
 
     //Awake
     void Awake()
@@ -84,6 +85,9 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
             
             Debug.Log(player.PlayerId + " Joined.");
+            
+            //Spawn Props
+            PropSpawn(runner, player);
         }
         
         // //Set Cursor
@@ -91,6 +95,11 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // Cursor.visible = false;
     }
 
+    private void PropSpawn(NetworkRunner runner, PlayerRef player)
+    {
+        NetworkObject networkProp = runner.Spawn(propPrefab, new Vector3(0, 0, 5), Quaternion.identity, player);
+    }
+    
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
     {
         if (playersList.TryGetValue(player, out NetworkObject playerObject))
@@ -111,11 +120,13 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     //Controls
     private bool jumpButton;
     private bool sprintButton;
-
+    private bool aimButton;
+    
     void Update()
     {
         jumpButton = jumpButton | Input.GetKeyDown(KeyCode.Space);
         sprintButton = sprintButton | Input.GetKey(KeyCode.LeftShift);
+        aimButton = aimButton | Input.GetMouseButton(1);
     }
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
@@ -132,9 +143,11 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
         
         data.sprintButton = sprintButton;
+        data.aimButton = aimButton;
 
         jumpButton = false;
         sprintButton = false;
+        aimButton = false;
         
         input.Set(data);
     }

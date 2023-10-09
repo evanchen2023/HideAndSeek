@@ -116,8 +116,10 @@ MonoBehaviour:
   TargetInterpolationDelay: 0.03
   follow: {fileID: 0}
   standOffset: {x: 1.3, y: 1.6, z: -3}
+  aimOffset: {x: 1.3, y: 1.6, z: -1.2}
   distance: 0.8
   turnRate: 510
+  initialized: 0
 --- !u!114 &-6470528302234218079
 MonoBehaviour:
   m_ObjectHideFlags: 0
