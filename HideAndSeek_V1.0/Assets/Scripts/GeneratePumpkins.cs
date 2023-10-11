@@ -14,7 +14,7 @@ public class GeneratePumpkins : MonoBehaviour
     public float minDistance = 5.0f;
     List<Vector3> generatedPositions = new List<Vector3>();
     List<Vector3> treePositions = new List<Vector3>();
-    List<Rect> stoneAreas = new List<Rect> //stone locations
+    List<Rect> stoneAreas = new List<Rect> //stone locations and creates invisible boarder.
     {
         new Rect(31,54,7,7),
         new Rect(21,72,8,9),
@@ -38,8 +38,8 @@ public class GeneratePumpkins : MonoBehaviour
             treePositions.Add(pos);
         }
     }
-
-    IEnumerator PumpkinDrop()
+    
+    IEnumerator PumpkinDrop() //Creates pumpkins on the map 
     {
         while (pumpkinCount < 10)
         {
@@ -74,7 +74,7 @@ public class GeneratePumpkins : MonoBehaviour
                 }
             }
 
-            foreach(var pos in treePositions)
+            foreach(var pos in treePositions) //Once player gets to the pumpkin it picks the pukin and adds to timer.
             {
                 if(Vector3.Distance(pumpkinPosition, pos) < minDistance)
                 {
