@@ -6,6 +6,10 @@ TagManager:
   tags:
   - Manager
   - PlayerUI
+  - PlayerModel
+  - CameraPosition
+  - PlayerCamera
+  - SeekerSpawn
   layers:
   - Default
   - TransparentFX
