@@ -17,16 +17,20 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private Dictionary<PlayerRef, NetworkObject> playersList = new Dictionary<PlayerRef, NetworkObject>();
     private Dictionary<PlayerRef, NetworkObject> cameraList = new Dictionary<PlayerRef, NetworkObject>();
     private List<NetworkObject> spawnList = new List<NetworkObject>();
+    private GameObject teamManagerObject;
+    private TeamManager teamManager;
 
     //Player Settings
-    [SerializeField] private NetworkPrefabRef playerPrefab;
+    [SerializeField] private NetworkPrefabRef seekerPrefab;
+    [SerializeField] private NetworkPrefabRef hiderPrefab;
     [SerializeField] private NetworkPrefabRef cameraPrefab;
     [SerializeField] private NetworkPrefabRef propPrefab;
 
     //Awake
     void Awake()
     {
-
+        teamManagerObject = GameObject.Find("TeamManager");
+        teamManager = teamManagerObject.GetComponent<TeamManager>();
     }
 
     async void StartGame(GameMode mode)
@@ -76,24 +80,17 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         if (runner.IsServer)
         {
-            //Get Spawns
-            spawnList = GetSpawnList();
-            int spawnIndex = Random.Range(0, spawnList.Count - 1);
-            Vector3 spawnPoint = spawnList[spawnIndex].transform.position;
-            RemoveSpawnPoint(spawnIndex);
-            
-            //Add Camera
-            NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, spawnPoint, Quaternion.identity, player);
-            cameraList.Add(player, networkPlayerCamera);
-            
-            //Add Player
-            NetworkObject networkPlayerObject = runner.Spawn(playerPrefab, spawnPoint, Quaternion.identity, player);
-            playersList.Add(player, networkPlayerObject);
-            
-            networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
-            
+            bool seeker = teamManager.SelectTeam(player);
+            //bool seeker = false; //Always Spawn as this for Testing
+            if (!seeker)
+            {
+                SpawnHider(runner, player);
+            }
+            if (seeker)
+            {
+                SpawnSeeker(runner, player);
+            }
             Debug.Log(player.PlayerId + " Joined.");
-            
             //Spawn Props
             PropSpawn(runner, player);
         }
@@ -101,6 +98,47 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         // //Set Cursor
         // Cursor.lockState = CursorLockMode.Locked;
         // Cursor.visible = false;
+    }
+    
+    //Spawn Players if they are Hider
+    private void SpawnHider(NetworkRunner runner, PlayerRef player)
+    {
+        //Get Spawns
+        spawnList = GetSpawnList();
+        int spawnIndex = Random.Range(0, spawnList.Count - 1);
+        Vector3 spawnPoint = spawnList[spawnIndex].transform.position;
+        RemoveSpawnPoint(spawnIndex);
+            
+        //Add Camera
+        NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, spawnPoint, Quaternion.identity, player);
+        cameraList.Add(player, networkPlayerCamera);
+            
+        //Add Player
+        NetworkObject networkPlayerObject = runner.Spawn(hiderPrefab, spawnPoint, Quaternion.identity, player);
+        playersList.Add(player, networkPlayerObject);
+            
+        networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
+                
+        Debug.Log(player.PlayerId + " Joining Hiders");
+    }
+    
+    //Spawn Players if they are Seeker
+    private void SpawnSeeker(NetworkRunner runner, PlayerRef player)
+    {
+        //Get Spawn Point
+        Vector3 spawnPoint = GetSpawnPoint();
+            
+        //Add Camera
+        NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, spawnPoint, Quaternion.identity, player);
+        cameraList.Add(player, networkPlayerCamera);
+            
+        //Add Player
+        NetworkObject networkPlayerObject = runner.Spawn(seekerPrefab, spawnPoint, Quaternion.identity, player);
+        playersList.Add(player, networkPlayerObject);
+            
+        networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
+                
+        Debug.Log(player.PlayerId + " Joining Seekers");
     }
 
     private void PropSpawn(NetworkRunner runner, PlayerRef player)
@@ -123,6 +161,19 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             cameraList.Remove(player);
             Debug.Log(player.PlayerId + " Left.");
         }
+    }
+
+    private Vector3 GetSpawnPoint()
+    {
+        //Get List of Spawn Points
+        spawnList = GetSpawnList();
+        //Get Random Spawn Index
+        int spawnIndex = Random.Range(0, spawnList.Count - 1);
+        //Set Spawn Point, Remove Index to Avoid Colluding Spawn Points
+        Vector3 spawnPoint = spawnList[spawnIndex].transform.position;
+        RemoveSpawnPoint(spawnIndex);
+
+        return spawnPoint;
     }
 
     private List<NetworkObject> GetSpawnList()
@@ -206,6 +257,11 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         float mouseY = Input.GetAxis("Mouse Y") * -1; //Invert Y Mouse
 
         return new Vector2(mouseX, mouseY);
+    }
+
+    private Dictionary<PlayerRef, NetworkObject> GetPlayersList()
+    {
+        return playersList;
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)

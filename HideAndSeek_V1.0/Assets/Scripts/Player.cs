@@ -25,10 +25,12 @@ public class Player : NetworkBehaviour, IPlayerLeft
 
     //Animator
     Animator animator;
-    //NetworkMecanimAnimator networkMecanimAnimator;
     private bool jumping = false;
     private bool throwing = false;
     private float inputMagnitude = 0;
+    
+    //Team
+    [SerializeField] private bool seeker;
 
     public Vector3 LookEuler
     {
@@ -45,13 +47,8 @@ public class Player : NetworkBehaviour, IPlayerLeft
     {
         //Character Controller
         nccp = gameObject.GetComponent<NetworkCharacterControllerPrototype>();
+        //Animation Controller
         animator = gameObject.GetComponent<NetworkMecanimAnimator>().Animator;
-        // networkMecanimAnimator = gameObject.GetComponent<NetworkMecanimAnimator>();
-        //
-        // if (networkMecanimAnimator.Animator == null)
-        // {
-        //     networkMecanimAnimator.Animator = animator;
-        // }
     }
 
     private Vector3 PlayerRelativeMovement(NetworkInputData data)
@@ -88,8 +85,8 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 {
                     movementDirection = new Vector3(0, 0, 1);
                     
-                    //Shooting
-                    if ((data.shootButtons & NetworkInputData.SHOOTBUTTON) != 0)
+                    //Shooting - Can Only Shoot if Seeker
+                    if ((data.shootButtons & NetworkInputData.SHOOTBUTTON) != 0 && seeker)
                     {
                         throwing = true;
                     }
@@ -130,16 +127,21 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 }
             }
         }
-        //Jump Animation
-        animator.SetBool("IsJump", jumping);
-        jumping = false;
-     
-        //Shooting Animation
-        animator.SetBool("IsThrow", throwing);
-        throwing = false;
         
-        //Running Animation
-        animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Runner.DeltaTime);
+        //Animations - Only Seeker Needs to be Animated
+        if (seeker)
+        {
+            //Jump Animation
+            animator.SetBool("IsJump", jumping);
+            jumping = false;
+     
+            //Shooting Animation
+            animator.SetBool("IsThrow", throwing);
+            throwing = false;
+        
+            //Running Animation
+            animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Runner.DeltaTime);
+        }
     }
 
     public override void Spawned()

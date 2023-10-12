@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8533439211021349062}
   - component: {fileID: -5060055384627285106}
   m_Layer: 0
-  m_Name: PlayerPrefab
+  m_Name: PlayerPrefabSeeker
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,6 +79,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   lookSensitivity: 135
   initialized: 0
+  seeker: 1
 --- !u!143 &-8419998552225482450
 CharacterController:
   m_ObjectHideFlags: 0
