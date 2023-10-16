@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Fusion;
 
-public class Timer : MonoBehaviour
+public class Timer : NetworkBehaviour
 {
     public float timeInSeconds;
     private float currentTimeInSeconds;

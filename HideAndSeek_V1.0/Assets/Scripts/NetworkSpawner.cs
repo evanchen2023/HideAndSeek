@@ -22,6 +22,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef playerPrefab;
     [SerializeField] private NetworkPrefabRef cameraPrefab;
     [SerializeField] private NetworkPrefabRef propPrefab;
+   
 
     //Awake
     void Awake()
