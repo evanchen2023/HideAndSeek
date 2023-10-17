@@ -10,12 +10,11 @@ TagManager:
   - CameraPosition
   - PlayerCamera
   - SeekerSpawn
-  - Map
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Bullet Layer
+  - 
   - Water
   - UI
   - Renderless

@@ -27,5 +27,4 @@ public class HealthBar : NetworkBehaviour
         fill.color = gradient.Evaluate(slider.normalizedValue);
     }
 
-  
 }
