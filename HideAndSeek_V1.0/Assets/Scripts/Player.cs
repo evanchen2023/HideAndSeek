@@ -30,6 +30,9 @@ public class Player : NetworkBehaviour, IPlayerLeft
     private bool throwing = false;
     private float inputMagnitude = 0;
 
+    public GameObject bulletPrefab; 
+    public Transform bulletSpawnPoint;
+
     public Vector3 LookEuler
     {
         get => lookEuler;
@@ -40,7 +43,24 @@ public class Player : NetworkBehaviour, IPlayerLeft
             lookEuler.x %= MAX_ANGLE;
         }
     }
-    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            Fire();
+        }
+    }
+
+    void Fire()
+    {
+        // Make sure 'bullet' is assigned to a prefab in the Inspector
+        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 6.0f;
+
+        // Destroy the bullet after some time (adjust the time as needed)
+        Destroy(bullet, 2.0f);
+    }
+
     void Awake()
     {
         //Character Controller
