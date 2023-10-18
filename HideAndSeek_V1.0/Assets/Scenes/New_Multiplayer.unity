@@ -190,7 +190,8 @@ MonoBehaviour:
     RawGuidValue: 71e6a01a2d8f44ee8379247eb17f52dc
   NestedObjects: []
   NetworkedBehaviours: []
-  SimulationBehaviours: []
+  SimulationBehaviours:
+  - {fileID: 213756581}
 --- !u!1 &239417524
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,7 +259,8 @@ MonoBehaviour:
     RawGuidValue: e08184aaaae54d44ad84d986cd98b5fb
   NestedObjects: []
   NetworkedBehaviours: []
-  SimulationBehaviours: []
+  SimulationBehaviours:
+  - {fileID: 239417526}
 --- !u!1 &743003061
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,7 +572,8 @@ MonoBehaviour:
     RawGuidValue: baf683f2bdeb418a9f2804ae055cc29c
   NestedObjects: []
   NetworkedBehaviours: []
-  SimulationBehaviours: []
+  SimulationBehaviours:
+  - {fileID: 1421694849}
 --- !u!1 &1621565428
 GameObject:
   m_ObjectHideFlags: 0
@@ -638,7 +641,8 @@ MonoBehaviour:
     RawGuidValue: 94a6dc06faab440fbf4debe6784d5c70
   NestedObjects: []
   NetworkedBehaviours: []
-  SimulationBehaviours: []
+  SimulationBehaviours:
+  - {fileID: 1621565430}
 --- !u!1001 &1624658236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -854,7 +858,8 @@ MonoBehaviour:
     RawGuidValue: 269ca258ecef4e96967079fcd492a5a4
   NestedObjects: []
   NetworkedBehaviours: []
-  SimulationBehaviours: []
+  SimulationBehaviours:
+  - {fileID: 1867378235}
 --- !u!1 &2007292319
 GameObject:
   m_ObjectHideFlags: 0
