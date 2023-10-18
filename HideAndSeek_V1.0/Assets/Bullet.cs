@@ -13,7 +13,10 @@ public class Bullet : NetworkBehaviour
         {
             health.TakeDamage(20);
         }
-    
-      
+    }
+
+    void FixedUpdateNetwork()
+    {
+        //Bullet Movement
     }
 }
