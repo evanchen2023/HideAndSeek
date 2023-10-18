@@ -48,11 +48,10 @@ public class Player : NetworkBehaviour, IPlayerLeft
     void Fire()
     {
         // Make sure 'bullet' is assigned to a prefab in the Inspector
-        NetworkObject bullet = Runner.Spawn(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 6.0f;
+        NetworkObject bullet = Runner.Spawn(bulletPrefab, bulletSpawnPoint.position, localCameraTransform.rotation);
 
         // Destroy the bullet after some time (adjust the time as needed)
-        Destroy(bullet, 2.0f);
+        //Destroy(bullet, 2.0f);
     }
 
     void Awake()

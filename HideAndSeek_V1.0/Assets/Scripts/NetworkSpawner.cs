@@ -183,6 +183,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             //Get Toggle Buttons
         data.sprintButton = sprintButton;
         data.aimButton = aimButton;
+        data.shootButton = shootButton;
 
         //Set Controls False
         jumpButton = false;

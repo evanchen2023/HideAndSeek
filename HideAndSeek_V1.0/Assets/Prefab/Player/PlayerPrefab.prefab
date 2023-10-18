@@ -388,7 +388,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   lookSensitivity: 135
   initialized: 0
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 4319794506633375230, guid: 133e1149fa4f749589a8b648f752c860, type: 3}
   bulletSpawnPoint: {fileID: 7980504765817656100}
 --- !u!143 &-8419998552225482450
 CharacterController:

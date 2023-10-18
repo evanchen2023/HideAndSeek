@@ -5,6 +5,14 @@ using Fusion;
 
 public class Bullet : NetworkBehaviour
 {
+
+    public int distance = 10;
+
+    void Start()
+    {
+        gameObject.GetComponent<Rigidbody>().velocity = transform.forward * 6.0f;
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         GameObject hit = collision.gameObject;
@@ -15,8 +23,8 @@ public class Bullet : NetworkBehaviour
         }
     }
 
-    void FixedUpdateNetwork()
+    public override void FixedUpdateNetwork()
     {
-        //Bullet Movement
+
     }
 }
