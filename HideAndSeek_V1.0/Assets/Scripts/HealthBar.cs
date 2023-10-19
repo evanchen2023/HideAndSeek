@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Fusion;
+using Object = System.Object;
 
-public class HealthBar : MonoBehaviour
+public class HealthBar : NetworkBehaviour
 {
 
     public Slider slider;
@@ -25,4 +27,5 @@ public class HealthBar : MonoBehaviour
         fill.color = gradient.Evaluate(slider.normalizedValue);
     }
 
+  
 }

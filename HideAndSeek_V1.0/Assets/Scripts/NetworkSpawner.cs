@@ -25,6 +25,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private NetworkPrefabRef hiderPrefab;
     [SerializeField] private NetworkPrefabRef cameraPrefab;
     [SerializeField] private NetworkPrefabRef propPrefab;
+   
 
     //Awake
     void Awake()
@@ -233,6 +234,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             //Get Toggle Buttons
         data.sprintButton = sprintButton;
         data.aimButton = aimButton;
+        data.shootButton = shootButton;
 
         //Set Controls False
         jumpButton = false;

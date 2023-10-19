@@ -32,6 +32,10 @@ public class Player : NetworkBehaviour, IPlayerLeft
     //Team
     [SerializeField] private bool seeker;
 
+    //Shooting
+    public NetworkObject bulletPrefab; 
+    public Transform bulletSpawnPoint;
+
     public Vector3 LookEuler
     {
         get => lookEuler;
@@ -42,7 +46,16 @@ public class Player : NetworkBehaviour, IPlayerLeft
             lookEuler.x %= MAX_ANGLE;
         }
     }
-    
+
+    void Fire()
+    {
+        // Make sure 'bullet' is assigned to a prefab in the Inspector
+        NetworkObject bullet = Runner.Spawn(bulletPrefab, bulletSpawnPoint.position, localCameraTransform.rotation);
+
+        // Destroy the bullet after some time (adjust the time as needed)
+        //Destroy(bullet, 2.0f);
+    }
+
     void Awake()
     {
         //Character Controller
@@ -119,6 +132,12 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 Vector3 cameraRelativeMovement = PlayerRelativeMovement(data);
                 nccp.Move(cameraRelativeMovement * Runner.DeltaTime, data.sprintButton);
                 
+                //Shooting 
+                if (data.shootButton)
+                {
+                    Fire();
+                }
+
                 //Movement Animation
                 inputMagnitude = Mathf.Clamp01(movementMagnitude.magnitude);
                 if (!data.sprintButton)
