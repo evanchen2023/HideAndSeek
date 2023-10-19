@@ -320,7 +320,7 @@ GameObject:
   - component: {fileID: -5060055384627285106}
   - component: {fileID: 5332136395382155174}
   m_Layer: 0
-  m_Name: PlayerPrefab
+  m_Name: PlayerPrefabSeeker
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -370,6 +370,7 @@ MonoBehaviour:
   - {fileID: -3670738341161330341}
   - {fileID: 2629980346050216620}
   - {fileID: -5060055384627285106}
+  - {fileID: 5332136395382155174}
   - {fileID: 8780731843542344834}
   - {fileID: 1248932217352399944}
   SimulationBehaviours: []
@@ -388,8 +389,10 @@ MonoBehaviour:
   _interpolationDataSource: 0
   lookSensitivity: 135
   initialized: 0
-  bulletPrefab: {fileID: 4319794506633375230, guid: 133e1149fa4f749589a8b648f752c860, type: 3}
+  bulletPrefab:
+    RawGuidValue: 133e1149fa4f749589a8b648f752c860
   bulletSpawnPoint: {fileID: 7980504765817656100}
+  seeker: 1
 --- !u!143 &-8419998552225482450
 CharacterController:
   m_ObjectHideFlags: 0
@@ -507,6 +510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8683896a04cf3e54688fcf156b584d47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   currentHealth: 100
   healthBar: {fileID: 0}
 --- !u!1 &5290592828586113347

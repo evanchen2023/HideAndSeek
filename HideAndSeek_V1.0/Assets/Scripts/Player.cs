@@ -23,6 +23,10 @@ public class Player : NetworkBehaviour, IPlayerLeft
     private PlayerCamera cameraInput;
     [SerializeField] private bool initialized = false;
 
+    //Shooting
+    public NetworkPrefabRef bulletPrefab; 
+    public Transform bulletSpawnPoint;
+    
     //Animator
     Animator animator;
     private bool jumping = false;
@@ -30,12 +34,8 @@ public class Player : NetworkBehaviour, IPlayerLeft
     private float inputMagnitude = 0;
     
     //Team
-    [SerializeField] private bool seeker;
-
-    //Shooting
-    public NetworkObject bulletPrefab; 
-    public Transform bulletSpawnPoint;
-
+    public bool seeker;
+    
     public Vector3 LookEuler
     {
         get => lookEuler;
@@ -45,15 +45,6 @@ public class Player : NetworkBehaviour, IPlayerLeft
             lookEuler.y %= MAX_ANGLE;
             lookEuler.x %= MAX_ANGLE;
         }
-    }
-
-    void Fire()
-    {
-        // Make sure 'bullet' is assigned to a prefab in the Inspector
-        NetworkObject bullet = Runner.Spawn(bulletPrefab, bulletSpawnPoint.position, localCameraTransform.rotation);
-
-        // Destroy the bullet after some time (adjust the time as needed)
-        //Destroy(bullet, 2.0f);
     }
 
     void Awake()
@@ -97,12 +88,6 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 if (data.aimButton)
                 {
                     movementDirection = new Vector3(0, 0, 1);
-                    
-                    //Shooting - Can Only Shoot if Seeker
-                    if ((data.shootButtons & NetworkInputData.SHOOTBUTTON) != 0 && seeker)
-                    {
-                        throwing = true;
-                    }
                 }
                 
                 //Update Camera and Movement Rotation
@@ -131,18 +116,21 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 //Relative Movement
                 Vector3 cameraRelativeMovement = PlayerRelativeMovement(data);
                 nccp.Move(cameraRelativeMovement * Runner.DeltaTime, data.sprintButton);
-                
-                //Shooting 
-                if (data.shootButton)
-                {
-                    Fire();
-                }
 
                 //Movement Animation
                 inputMagnitude = Mathf.Clamp01(movementMagnitude.magnitude);
                 if (!data.sprintButton)
                 {
                     inputMagnitude /= 2;
+                }
+                
+                //Shooting - Can Only Shoot if Seeker
+                if (seeker)
+                {
+                    if (data.shootButton)
+                    {
+                        Fire();
+                    }
                 }
             }
         }
@@ -161,6 +149,12 @@ public class Player : NetworkBehaviour, IPlayerLeft
             //Running Animation
             animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Runner.DeltaTime);
         }
+    }
+    
+    void Fire()
+    {
+        //Spawn Bullet using Runner
+        Runner.Spawn(bulletPrefab, bulletSpawnPoint.position, localCameraTransform.rotation);
     }
 
     public override void Spawned()

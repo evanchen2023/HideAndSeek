@@ -11,6 +11,7 @@ TagManager:
   - PlayerCamera
   - SeekerSpawn
   - Map
+  - Bullet
   layers:
   - Default
   - TransparentFX

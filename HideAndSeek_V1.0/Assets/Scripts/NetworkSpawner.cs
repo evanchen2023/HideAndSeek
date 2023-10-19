@@ -21,8 +21,9 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private TeamManager teamManager;
 
     //Player Settings
+    public NetworkPrefabRef[] hiderPrefabList = new NetworkPrefabRef[4]; 
     [SerializeField] private NetworkPrefabRef seekerPrefab;
-    [SerializeField] private NetworkPrefabRef hiderPrefab;
+    private NetworkPrefabRef hiderPrefab;
     [SerializeField] private NetworkPrefabRef cameraPrefab;
     [SerializeField] private NetworkPrefabRef propPrefab;
    
@@ -82,7 +83,6 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             bool seeker = teamManager.SelectTeam(player);
-            //bool seeker = false; //Always Spawn as this for Testing
             if (!seeker)
             {
                 SpawnHider(runner, player);
@@ -104,23 +104,32 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     //Spawn Players if they are Hider
     private void SpawnHider(NetworkRunner runner, PlayerRef player)
     {
-        //Get Spawns
-        spawnList = GetSpawnList();
-        int spawnIndex = Random.Range(0, spawnList.Count - 1);
-        Vector3 spawnPoint = spawnList[spawnIndex].transform.position;
-        RemoveSpawnPoint(spawnIndex);
+        RandomHiderModel();
+
+        if (hiderPrefab != null)
+        {
+            //Get Spawns
+            spawnList = GetSpawnList();
+            int spawnIndex = Random.Range(0, spawnList.Count - 1);
+            Vector3 spawnPoint = spawnList[spawnIndex].transform.position;
+            RemoveSpawnPoint(spawnIndex);
             
-        //Add Camera
-        NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, spawnPoint, Quaternion.identity, player);
-        cameraList.Add(player, networkPlayerCamera);
+            //Add Camera
+            NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, spawnPoint, Quaternion.identity, player);
+            cameraList.Add(player, networkPlayerCamera);
             
-        //Add Player
-        NetworkObject networkPlayerObject = runner.Spawn(hiderPrefab, spawnPoint, Quaternion.identity, player);
-        playersList.Add(player, networkPlayerObject);
+            //Add Player
+            NetworkObject networkPlayerObject = runner.Spawn(hiderPrefab, spawnPoint, Quaternion.identity, player);
+            playersList.Add(player, networkPlayerObject);
             
-        networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
+            networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
                 
-        Debug.Log(player.PlayerId + " Joining Hiders");
+            Debug.Log(player.PlayerId + " Joining Hiders");
+        }
+        else
+        {
+            Debug.Log("Error Spawning Instance");
+        }
     }
     
     //Spawn Players if they are Seeker
@@ -145,6 +154,12 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private void PropSpawn(NetworkRunner runner, PlayerRef player)
     {
         NetworkObject networkProp = runner.Spawn(propPrefab, new Vector3(0, 0, 5), Quaternion.identity, player);
+    }
+
+    private void RandomHiderModel()
+    {
+        int modelNumber = Random.Range(0, hiderPrefabList.Length - 1);
+        hiderPrefab = hiderPrefabList[modelNumber];
     }
     
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -209,7 +224,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         jumpButton = jumpButton | Input.GetKeyDown(KeyCode.Space);
         sprintButton = sprintButton | Input.GetKey(KeyCode.LeftShift);
-        shootButton = shootButton | Input.GetMouseButtonDown(0);
+        shootButton = shootButton | Input.GetKeyDown(KeyCode.F);
         aimButton = aimButton | Input.GetMouseButton(1);
     }
 
@@ -226,12 +241,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             data.buttons |= NetworkInputData.JUMPBUTTON;
         }
 
-        if (shootButton)
-        {
-            data.shootButtons |= NetworkInputData.SHOOTBUTTON;
-        }
-
-            //Get Toggle Buttons
+        //Get Toggle Buttons
         data.sprintButton = sprintButton;
         data.aimButton = aimButton;
         data.shootButton = shootButton;
