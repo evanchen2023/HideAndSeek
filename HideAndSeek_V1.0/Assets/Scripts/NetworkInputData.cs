@@ -12,7 +12,7 @@ public struct NetworkInputData : INetworkInput
     public byte shootButtons;
     public bool sprintButton;
     public bool aimButton;
-    //public bool shootButton;
+    public bool shootButton;
     
     public Vector3 direction;
     public Vector2 rotationDir;

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Fusion;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class Health : NetworkBehaviour
 {
-    public const int maxHealth = 100;
-    public int currentHealth = maxHealth;
+    public const int MAX_HEALTH = 100;
+    public int currentHealth = MAX_HEALTH;
     public HealthBar healthBar;
 
     public void TakeDamage(int amount)

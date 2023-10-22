@@ -23,16 +23,19 @@ public class Player : NetworkBehaviour, IPlayerLeft
     private PlayerCamera cameraInput;
     [SerializeField] private bool initialized = false;
 
+    //Shooting
+    public NetworkPrefabRef bulletPrefab; 
+    public Transform bulletSpawnPoint;
+    
     //Animator
     Animator animator;
-    //NetworkMecanimAnimator networkMecanimAnimator;
     private bool jumping = false;
     private bool throwing = false;
     private float inputMagnitude = 0;
-
-    public GameObject bulletPrefab; 
-    public Transform bulletSpawnPoint;
-
+    
+    //Team
+    public bool seeker;
+    
     public Vector3 LookEuler
     {
         get => lookEuler;
@@ -43,35 +46,13 @@ public class Player : NetworkBehaviour, IPlayerLeft
             lookEuler.x %= MAX_ANGLE;
         }
     }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            Fire();
-        }
-    }
-
-    void Fire()
-    {
-        // Make sure 'bullet' is assigned to a prefab in the Inspector
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        bullet.GetComponent<Rigidbody>().velocity = bullet.transform.forward * 6.0f;
-
-        // Destroy the bullet after some time (adjust the time as needed)
-        Destroy(bullet, 2.0f);
-    }
 
     void Awake()
     {
         //Character Controller
         nccp = gameObject.GetComponent<NetworkCharacterControllerPrototype>();
+        //Animation Controller
         animator = gameObject.GetComponent<NetworkMecanimAnimator>().Animator;
-        // networkMecanimAnimator = gameObject.GetComponent<NetworkMecanimAnimator>();
-        //
-        // if (networkMecanimAnimator.Animator == null)
-        // {
-        //     networkMecanimAnimator.Animator = animator;
-        // }
     }
 
     private Vector3 PlayerRelativeMovement(NetworkInputData data)
@@ -107,12 +88,6 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 if (data.aimButton)
                 {
                     movementDirection = new Vector3(0, 0, 1);
-                    
-                    //Shooting
-                    if ((data.shootButtons & NetworkInputData.SHOOTBUTTON) != 0)
-                    {
-                        throwing = true;
-                    }
                 }
                 
                 //Update Camera and Movement Rotation
@@ -141,25 +116,45 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 //Relative Movement
                 Vector3 cameraRelativeMovement = PlayerRelativeMovement(data);
                 nccp.Move(cameraRelativeMovement * Runner.DeltaTime, data.sprintButton);
-                
+
                 //Movement Animation
                 inputMagnitude = Mathf.Clamp01(movementMagnitude.magnitude);
                 if (!data.sprintButton)
                 {
                     inputMagnitude /= 2;
                 }
+                
+                //Shooting - Can Only Shoot if Seeker
+                if (seeker)
+                {
+                    if (data.shootButton)
+                    {
+                        Fire();
+                    }
+                }
             }
         }
-        //Jump Animation
-        animator.SetBool("IsJump", jumping);
-        jumping = false;
-     
-        //Shooting Animation
-        animator.SetBool("IsThrow", throwing);
-        throwing = false;
         
-        //Running Animation
-        animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Runner.DeltaTime);
+        //Animations - Only Seeker Needs to be Animated
+        if (seeker)
+        {
+            //Jump Animation
+            animator.SetBool("IsJump", jumping);
+            jumping = false;
+     
+            //Shooting Animation
+            animator.SetBool("IsThrow", throwing);
+            throwing = false;
+        
+            //Running Animation
+            animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Runner.DeltaTime);
+        }
+    }
+    
+    void Fire()
+    {
+        //Spawn Bullet using Runner
+        Runner.Spawn(bulletPrefab, bulletSpawnPoint.position, localCameraTransform.rotation);
     }
 
     public override void Spawned()
