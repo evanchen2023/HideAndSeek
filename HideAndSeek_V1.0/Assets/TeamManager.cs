@@ -6,14 +6,17 @@ using UnityEngine.UIElements;
 
 public class TeamManager : NetworkBehaviour
 {
-    private List<PlayerRef> hiderList = new List<PlayerRef>();
+  
+   private List<PlayerRef> hiderList = new List<PlayerRef>();
 
-    private List<PlayerRef> seekerList = new List<PlayerRef>();
+   private List<PlayerRef> seekerList = new List<PlayerRef>();
+
+   }
 
     //Select a Team
     public bool SelectTeam(PlayerRef player)
     {
-        bool isSeeker = false;
+       bool isSeeker = false;
         int seekerCount = seekerList.Count;
         int hiderCount = hiderList.Count;
         int minHiders = seekerCount * 3;
@@ -62,4 +65,5 @@ public class TeamManager : NetworkBehaviour
     {
         seekerList.Add(player);
     }
+    
 }
