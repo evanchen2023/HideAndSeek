@@ -26,14 +26,10 @@ public class PlayerCamera : NetworkTransform
     private Camera localCamera;
     
     //Camera Collision
-    private Vector2 cameraDistanceMinMax;
-    private float camDistance;
     protected override void Awake()
     {
         //Get Local Player Input Script
         localCamera = GetComponent<Camera>();
-        cameraDistanceMinMax = new Vector2(0.1f,distance);
-        camDistance = cameraDistanceMinMax.y;
     }
 
     // public override void FixedUpdateNetwork()
@@ -92,9 +88,7 @@ public class PlayerCamera : NetworkTransform
                 rotX, Quaternion.AngleAxis(pitch, right),
                 Runner.DeltaTime * turnRate);
 
-            Vector3 offset; //= standOffset;
-
-            offset = aimButton ? aimOffset : standOffset;
+            var offset = aimButton ? aimOffset : standOffset;
 
             var shoulderOffset = rotY * originTransform.MultiplyVector(offset);
             var armOffset = rotY * (rotX * (distance * back));

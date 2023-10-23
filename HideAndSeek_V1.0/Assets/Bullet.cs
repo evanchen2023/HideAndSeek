@@ -28,12 +28,10 @@ public class Bullet : NetworkBehaviour
                 }
             }
 
-            if (!other.CompareTag("Bullet"))
+            if (Runner)
             {
                 if (Runner.IsServer)
-                {
                     Runner.Despawn(Object);
-                }
             }
         }
     }
