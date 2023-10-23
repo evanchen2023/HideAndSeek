@@ -15,6 +15,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner runner;
     private INetworkSceneManager sceneManager;
     private Dictionary<PlayerRef, NetworkObject> playersList = new Dictionary<PlayerRef, NetworkObject>();
+    private Dictionary<NetworkObject, PlayerRef> reverseList = new Dictionary<NetworkObject, PlayerRef>();
     private Dictionary<PlayerRef, NetworkObject> cameraList = new Dictionary<PlayerRef, NetworkObject>();
     private List<NetworkObject> spawnList = new List<NetworkObject>();
     private GameObject teamManagerObject;
@@ -96,9 +97,9 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             PropSpawn(runner, player);
         }
         
-        // //Set Cursor
-        // Cursor.lockState = CursorLockMode.Locked;
-        // Cursor.visible = false;
+        //Set Cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     
     //Spawn Players if they are Hider
@@ -121,6 +122,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             //Add Player
             NetworkObject networkPlayerObject = runner.Spawn(hiderPrefab, spawnPoint, Quaternion.identity, player);
             playersList.Add(player, networkPlayerObject);
+            reverseList.Add(networkPlayerObject, player);
             
             networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
                 
@@ -160,6 +162,28 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         int modelNumber = Random.Range(0, hiderPrefabList.Length - 1);
         hiderPrefab = hiderPrefabList[modelNumber];
+    }
+
+    public void KillPlayer(NetworkObject playerObject)
+    {
+        if (reverseList.TryGetValue(playerObject, out PlayerRef player))
+        {
+            runner.Despawn(playerObject);
+            playersList.Remove(player);
+            Debug.Log(player.PlayerId + " Killed.");
+            
+            if (cameraList.TryGetValue(player, out NetworkObject cameraObject))
+            {
+                runner.Despawn(cameraObject);
+                cameraList.Remove(player);
+                Debug.Log(player.PlayerId + " Killed.");
+            }
+
+            if (playerObject.HasInputAuthority)
+            {
+                runner.Disconnect(player);
+            }
+        }
     }
     
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
