@@ -96,13 +96,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 0
-  m_Radius: 0.3
+  m_Height: 2
+  m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.3, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &2629980346050216620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   InterpolationSpace: 0
-  InterpolationTarget: {fileID: 0}
+  InterpolationTarget: {fileID: 8144394621160801647}
   InterpolateErrorCorrection: 1
   InterpolatedErrorCorrectionSettings:
     MinRate: 3.3
@@ -276,7 +276,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rock
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2402102739181304197, guid: ce42fb2d8deb6124e9f9e12450db401e, type: 3}
+    - {fileID: 1036496480063141313, guid: ce42fb2d8deb6124e9f9e12450db401e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: ce42fb2d8deb6124e9f9e12450db401e, type: 3}
 --- !u!4 &8144394621160801647 stripped
 Transform:

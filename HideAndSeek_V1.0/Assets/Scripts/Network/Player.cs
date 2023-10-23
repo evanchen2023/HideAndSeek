@@ -85,13 +85,14 @@ public class Player : NetworkBehaviour, IPlayerLeft
                 Vector3 movementMagnitude = movementDirection;
                 
                 //Set Direction if Aiming
-                if (data.aimButton)
+                var aiming = data.aimButton;
+                if (aiming)
                 {
                     movementDirection = new Vector3(0, 0, 1);
                 }
                 
                 //Update Camera and Movement Rotation
-                cameraInput.CameraUpdate(data.aimButton);
+                cameraInput.CameraUpdate(aiming);
                 movementDirection = Quaternion.AngleAxis(localCameraTransform.rotation.eulerAngles.y, Vector3.up) *
                                     movementDirection;
                 movementDirection.Normalize();
@@ -150,8 +151,8 @@ public class Player : NetworkBehaviour, IPlayerLeft
             animator.SetFloat("Input Magnitude", inputMagnitude, 0.05f, Runner.DeltaTime);
         }
     }
-    
-    void Fire()
+
+    private void Fire()
     {
         //Spawn Bullet using Runner
         Runner.Spawn(bulletPrefab, bulletSpawnPoint.position, localCameraTransform.rotation);
