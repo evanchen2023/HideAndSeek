@@ -41,7 +41,7 @@ public class HiddenFeature : MonoBehaviour
     }
 
     // Toggle player's hidden state
-    void ToggleHidden()
+    public void ToggleHidden()
     {
         if (currentDisguise != null)
         {
