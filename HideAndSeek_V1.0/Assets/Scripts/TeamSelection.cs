@@ -1,10 +1,36 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Photon.fusion;
+using Fusion;
 
-public class TeamSelection : MonoBehaviour
+public class TeamSelection : NetworkBehaviour
 {
-    [SerializeField]
+    [SerializeField] private PlayerRef PlayerRef; // Reference to the PlayerInfo network object.
+
+    public void SelectTeam(int newTeamId)
+    {
+        if (networkObject.IsServer)
+        {
+            PlayerRef.TeamId = newTeamId;
+            networkObject.SendEvent(new TeamSelectedEvent { TeamId = newTeamId });
+        }
+    }
+}
+
+public class TeamSelectedEvent : NetworkEvent
+{
+    public int TeamId;
+
+    public override void Serialize(NetworkWriter writer)
+    {
+        writer.Write(TeamId);
+    }
+
+    public override void Deserialize(NetworkReader reader)
+    {
+        TeamId = reader.ReadInt32();
+    }
+
+    /*[SerializeField]
     private Button join1; // 
 
     [SerializeField]
@@ -40,5 +66,5 @@ public class TeamSelection : MonoBehaviour
         {
             Debug.LogWarning("Not connected to the Photon network.");
         }
-    }
+    }*/
 }

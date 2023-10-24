@@ -6,12 +6,79 @@ using UnityEngine.UIElements;
 
 public class TeamManager : NetworkBehaviour
 {
-    private List<PlayerRef> hiderList = new List<PlayerRef>();
+    private List<PlayerRef> hiders = new List<PlayerRef>();
+    private List<PlayerRef> seekers = new List<PlayerRef>();
 
-    private List<PlayerRef> seekerList = new List<PlayerRef>();
+    // Define spawn points for Hiders and Seekers
+    public Transform[] hiderSpawnPoints;
+    public Transform[] seekerSpawnPoints;
+
+    public void OnPlayerJoined(PlayerRef player)
+    {
+        // When a player joins, add them to their respective team and handle initialization.
+        players.Add(player);
+
+        // Determine the player's team, e.g., based on the TeamId.
+        if (player.TeamId == 1)
+        {
+            hiders.Add(player);
+            HandleHiderInitialization(player);
+        }
+        else if (player.TeamId == 2)
+        {
+            seekers.Add(player);
+            HandleSeekerInitialization(player);
+        }
+    }
+
+    public void OnTeamSelected(int teamId, PlayerRef player)
+    {
+        // Handle team selection logic, such as assigning a team and spawning players.
+        // This method is called when a player selects a team using the TeamSelection script.
+
+        // Example: When a player selects a team, call this method with the chosen team ID.
+        player.TeamId = teamId;
+
+        if (teamId == 1)
+        {
+            // The player chose to be a Hider.
+            HandleHiderInitialization(player);
+        }
+        else if (teamId == 2)
+        {
+            // The player chose to be a Seeker.
+            HandleSeekerInitialization(player);
+        }
+    }
+
+    private void HandleHiderInitialization(PlayerRef hider)
+    {
+        // Implement Hider-specific initialization logic.
+        // Assign a spawn point for Hiders.
+
+        if (hiderSpawnPoints.Length > 0)
+        {
+            // Randomly select a spawn point for the Hider.
+            int randomSpawnIndex = Random.Range(0, hiderSpawnPoints.Length);
+            hider.transform.position = hiderSpawnPoints[randomSpawnIndex].position;
+        }
+    }
+
+    private void HandleSeekerInitialization(PlayerRef seeker)
+    {
+        // Implement Seeker-specific initialization logic.
+        // Assign a spawn point for Seekers.
+
+        if (seekerSpawnPoints.Length > 0)
+        {
+            // Randomly select a spawn point for the Seeker.
+            int randomSpawnIndex = Random.Range(0, seekerSpawnPoints.Length);
+            seeker.transform.position = seekerSpawnPoints[randomSpawnIndex].position;
+        }
+    }
 
     //Select a Team
-    public bool SelectTeam(PlayerRef player)
+    /*public bool SelectTeam(PlayerRef player)
     {
         bool isSeeker = false;
         int seekerCount = seekerList.Count;
@@ -61,5 +128,5 @@ public class TeamManager : NetworkBehaviour
     private void AddSeeker(PlayerRef player)
     {
         seekerList.Add(player);
-    }
+    }*/
 }
