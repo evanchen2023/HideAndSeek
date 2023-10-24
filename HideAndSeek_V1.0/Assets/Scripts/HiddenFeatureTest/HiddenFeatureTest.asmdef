@@ -1,0 +1,6 @@
+{
+    "name": "HiddenFeatureTest",
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}
