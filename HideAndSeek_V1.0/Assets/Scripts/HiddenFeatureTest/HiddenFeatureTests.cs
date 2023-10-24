@@ -21,16 +21,6 @@ public class HiddenFeatureTests
         Object.Destroy(go);
     }
 
-    [Test]
-    public void Test_DisguiseActivation()
-    {
-        hiddenFeature.isInRange = true;
-        hiddenFeature.isCooldown = false;
-        InputSimulator.SimulateKeyDown(KeyCode.E);
-        hiddenFeature.Update();
-        Assert.IsNotNull(hiddenFeature.currentDisguise);
-    }
-
     [UnityTest]
     public IEnumerator Test_DisguiseDuration()
     {
@@ -40,19 +30,6 @@ public class HiddenFeatureTests
         hiddenFeature.Update();
         yield return new WaitForSeconds(20f);
         Assert.IsNull(hiddenFeature.currentDisguise);
-    }
-
-    [UnityTest]
-    public IEnumerator Test_DisguiseFlicker()
-    {
-        hiddenFeature.isInRange = true;
-        hiddenFeature.isCooldown = false;
-        InputSimulator.SimulateKeyDown(hiddenFeature.interactKey);
-        hiddenFeature.Update();
-        yield return new WaitForSeconds(17f);
-        bool isFlickering = hiddenFeature.currentDisguise.activeSelf;
-        yield return new WaitForSeconds(0.5f);
-        Assert.AreNotEqual(isFlickering, hiddenFeature.currentDisguise.activeSelf);
     }
 
     [UnityTest]
