@@ -83,6 +83,7 @@ public class HiddenFeature : MonoBehaviour
             Debug.Log("Player now in range");
         }
     }
+
     // When the player leaves the trigger area, set isInRange to false
     public void OnTriggerExit(Collider collision)
     {
