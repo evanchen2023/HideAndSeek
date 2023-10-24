@@ -512,7 +512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   currentHealth: 100
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 8780731843542344834}
 --- !u!1 &5290592828586113347
 GameObject:
   m_ObjectHideFlags: 0
