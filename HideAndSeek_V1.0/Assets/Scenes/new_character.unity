@@ -2920,7 +2920,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424473696}
-  m_LocalRotation: {x: 0.04622491, y: -0.0000000021484987, z: 9.942045e-11, w: 0.99893105}
+  m_LocalRotation: {x: 0.04622491, y: 0.0000000021484985, z: -9.942044e-11, w: 0.99893105}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7859,9 +7859,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 985002480}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ada31d6ef3993cb42ae7ef29fd687514, type: 3}
+  m_Script: {fileID: 11500000, guid: 88eda0745ecf8894e983af8dba638ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  _messages: {fileID: 0}
+  input: {fileID: 0}
+  usernameInput: {fileID: 0}
+  username: Default
 --- !u!114 &985002482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7883,7 +7888,8 @@ MonoBehaviour:
   NetworkGuid:
     RawGuidValue: 4409cb41ed564660980d2fc512c29e07
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 985002481}
   SimulationBehaviours: []
 --- !u!4 &985002483
 Transform:
@@ -10269,6 +10275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d503bb4c3b9c19740b9233013122a308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   slider: {fileID: 1414240764}
   gradient:
     serializedVersion: 2
@@ -13508,6 +13515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e331feac79521534b8c9b3735f81ada8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   timeInSeconds: 120
   timerText: {fileID: 1637798373}
   warningColor: {r: 1, g: 0, b: 0, a: 1}
