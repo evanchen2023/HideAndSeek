@@ -15,6 +15,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private NetworkRunner runner;
     private INetworkSceneManager sceneManager;
     private Dictionary<PlayerRef, NetworkObject> playersList = new Dictionary<PlayerRef, NetworkObject>();
+    private Dictionary<NetworkObject, PlayerRef> reverseList = new Dictionary<NetworkObject, PlayerRef>();
     private Dictionary<PlayerRef, NetworkObject> cameraList = new Dictionary<PlayerRef, NetworkObject>();
     private List<NetworkObject> spawnList = new List<NetworkObject>();
     private GameObject teamManagerObject;
@@ -96,9 +97,9 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             PropSpawn(runner, player);
         }
         
-        // //Set Cursor
-        // Cursor.lockState = CursorLockMode.Locked;
-        // Cursor.visible = false;
+        //Set Cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     
     //Spawn Players if they are Hider
@@ -108,11 +109,8 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
         if (hiderPrefab != null)
         {
-            //Get Spawns
-            spawnList = GetSpawnList();
-            int spawnIndex = Random.Range(0, spawnList.Count - 1);
-            Vector3 spawnPoint = spawnList[spawnIndex].transform.position;
-            RemoveSpawnPoint(spawnIndex);
+            //Get Spawn Point
+            Vector3 spawnPoint = GetSpawnPoint(false);
             
             //Add Camera
             NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, spawnPoint, Quaternion.identity, player);
@@ -121,6 +119,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
             //Add Player
             NetworkObject networkPlayerObject = runner.Spawn(hiderPrefab, spawnPoint, Quaternion.identity, player);
             playersList.Add(player, networkPlayerObject);
+            reverseList.Add(networkPlayerObject, player);
             
             networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
                 
@@ -136,16 +135,17 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     private void SpawnSeeker(NetworkRunner runner, PlayerRef player)
     {
         //Get Spawn Point
-        Vector3 spawnPoint = GetSpawnPoint();
+        Vector3 spawnPoint = GetSpawnPoint(true);
             
-        //Add Camera
+        //Add Camera to Server
         NetworkObject networkPlayerCamera = runner.Spawn(cameraPrefab, spawnPoint, Quaternion.identity, player);
         cameraList.Add(player, networkPlayerCamera);
             
-        //Add Player
+        //Add Player to Server
         NetworkObject networkPlayerObject = runner.Spawn(seekerPrefab, spawnPoint, Quaternion.identity, player);
         playersList.Add(player, networkPlayerObject);
             
+        //Connect Correct Camera to Player
         networkPlayerCamera.GetComponent<PlayerCamera>().SetFollow(networkPlayerObject);
                 
         Debug.Log(player.PlayerId + " Joining Seekers");
@@ -160,6 +160,28 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
     {
         int modelNumber = Random.Range(0, hiderPrefabList.Length - 1);
         hiderPrefab = hiderPrefabList[modelNumber];
+    }
+
+    public void KillPlayer(NetworkObject playerObject)
+    {
+        if (reverseList.TryGetValue(playerObject, out PlayerRef player))
+        {
+            runner.Despawn(playerObject);
+            playersList.Remove(player);
+            Debug.Log(player.PlayerId + " Killed.");
+            
+            if (cameraList.TryGetValue(player, out NetworkObject cameraObject))
+            {
+                runner.Despawn(cameraObject);
+                cameraList.Remove(player);
+                Debug.Log(player.PlayerId + " Killed.");
+            }
+
+            if (playerObject.HasInputAuthority)
+            {
+                SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+            }
+        }
     }
     
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -179,10 +201,10 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         }
     }
 
-    private Vector3 GetSpawnPoint()
+    private Vector3 GetSpawnPoint(bool seeker)
     {
         //Get List of Spawn Points
-        spawnList = GetSpawnList();
+        spawnList = seeker ? GetSeekerSpawnList() : GetHiderSpawnList();
         //Get Random Spawn Index
         int spawnIndex = Random.Range(0, spawnList.Count - 1);
         //Set Spawn Point, Remove Index to Avoid Colluding Spawn Points
@@ -192,14 +214,33 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
         return spawnPoint;
     }
 
-    private List<NetworkObject> GetSpawnList()
+    private List<NetworkObject> GetSeekerSpawnList()
     {
         List<NetworkObject> returnList = new List<NetworkObject>();
         var spawns = GameObject.FindGameObjectsWithTag("SeekerSpawn");
 
-        for (int i = 0; i < spawns.Length; i++)
+        if (spawns.Length >= 1)
         {
-            returnList.Add(spawns[i].GetComponent<NetworkObject>());
+            for (int i = 0; i < spawns.Length; i++)
+            {
+                returnList.Add(spawns[i].GetComponent<NetworkObject>());
+            }
+        }
+
+        return returnList;
+    }
+
+    private List<NetworkObject> GetHiderSpawnList()
+    {
+        List<NetworkObject> returnList = new List<NetworkObject>();
+        var spawns = GameObject.FindGameObjectsWithTag("HiderSpawn");
+
+        if (spawns.Length >= 1)
+        {
+            for (int i = 0; i < spawns.Length; i++)
+            {
+                returnList.Add(spawns[i].GetComponent<NetworkObject>());
+            }
         }
 
         return returnList;
@@ -291,6 +332,7 @@ public class NetworkSpawner : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnDisconnectedFromServer(NetworkRunner runner)
     {
+        
     }
 
     public void OnConnectRequest(NetworkRunner runner, NetworkRunnerCallbackArgs.ConnectRequest request, byte[] token)

@@ -11,7 +11,7 @@ public class PlayerCamera : NetworkTransform
     [SerializeField] private Vector3 standOffset = new(0.3f, 1.6f, -3f);
     [SerializeField] private Vector3 aimOffset = new(1.3f, 1.6f, -1.2f);
     [SerializeField] private float distance = 0.1f;
-    [SerializeField] private float turnRate = 510f;
+    private float turnRate = 220f;
 
     private const float MAX_PITCH = 89f;
     private Vector3 back;
@@ -26,14 +26,15 @@ public class PlayerCamera : NetworkTransform
     private Camera localCamera;
     
     //Camera Collision
-    private Vector2 cameraDistanceMinMax;
-    private float camDistance;
     protected override void Awake()
     {
         //Get Local Player Input Script
         localCamera = GetComponent<Camera>();
-        cameraDistanceMinMax = new Vector2(0.1f,distance);
-        camDistance = cameraDistanceMinMax.y;
+
+        if (Camera.main)
+        {
+            Camera.main.enabled = false;
+        }
     }
 
     // public override void FixedUpdateNetwork()
@@ -45,41 +46,44 @@ public class PlayerCamera : NetworkTransform
     {
         if (Object.HasInputAuthority)
         {
-            //Enable Camera
-            var playerList = GameObject.FindGameObjectsWithTag("Player");
-
-            for (int i = 0; i < playerList.Length; i++)
+            if (!initialized)
             {
-                if (playerList[i].GetComponent<NetworkObject>().HasInputAuthority)
+                //Enable Camera
+                var playerList = GameObject.FindGameObjectsWithTag("Player");
+
+                for (int i = 0; i < playerList.Length; i++)
                 {
-                    player = playerList[i].GetComponent<NetworkObject>();
-                    Debug.Log("Player Found : " + player);
+                    if (playerList[i].GetComponent<NetworkObject>().HasInputAuthority)
+                    {
+                        player = playerList[i].GetComponent<NetworkObject>();
+                        Debug.Log("Player Found : " + player);
+                    }
                 }
-            }
 
-            if (player)
-            {
-                follow = player.transform;
-                playerInput = player.GetComponent<Player>();
+                if (player)
+                {
+                    follow = player.transform;
+                    playerInput = player.GetComponent<Player>();
         
-                //Set Follow
-                originTransform = follow.localToWorldMatrix;
-                back = originTransform.MultiplyVector(Vector3.back);
-                right = originTransform.MultiplyVector(Vector3.right);
+                    //Set Follow
+                    originTransform = follow.localToWorldMatrix;
+                    back = originTransform.MultiplyVector(Vector3.back);
+                    right = originTransform.MultiplyVector(Vector3.right);
         
-                playerInput.SetLocalCamera(Object);
+                    playerInput.SetLocalCamera(Object);
         
-                Debug.Log("Camera : Added Follow");
-                initialized = true;
-            }
+                    Debug.Log("Camera : Added Follow");
+                    initialized = true;
+                }
             
-            localCamera.enabled = true;
-            localCamera.GetComponent<AudioListener>().enabled = true;
+                localCamera.enabled = true;
+                localCamera.GetComponent<AudioListener>().enabled = true;
+            }
         }
     }
 
     // Update is called once per frame
-    public virtual void CameraUpdate(bool aimButton)
+    public void CameraUpdate(bool aiming)
     {
         if (initialized)
         {
@@ -92,9 +96,7 @@ public class PlayerCamera : NetworkTransform
                 rotX, Quaternion.AngleAxis(pitch, right),
                 Runner.DeltaTime * turnRate);
 
-            Vector3 offset; //= standOffset;
-
-            offset = aimButton ? aimOffset : standOffset;
+            Vector3 offset = aiming ? aimOffset : standOffset;
 
             var shoulderOffset = rotY * originTransform.MultiplyVector(offset);
             var armOffset = rotY * (rotX * (distance * back));

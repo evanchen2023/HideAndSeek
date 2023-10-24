@@ -12,6 +12,8 @@ TagManager:
   - SeekerSpawn
   - Map
   - Bullet
+  - NetworkSpawner
+  - HiderSpawn
   layers:
   - Default
   - TransparentFX

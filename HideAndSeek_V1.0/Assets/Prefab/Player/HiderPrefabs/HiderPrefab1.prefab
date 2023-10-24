@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2629980346050216620}
   - component: {fileID: 8533439211021349062}
   - component: {fileID: -5060055384627285106}
+  - component: {fileID: -5905674463923993580}
   m_Layer: 0
   m_Name: HiderPrefab1
   m_TagString: Player
@@ -63,6 +64,7 @@ MonoBehaviour:
   - {fileID: -3670738341161330341}
   - {fileID: 2629980346050216620}
   - {fileID: -5060055384627285106}
+  - {fileID: -5905674463923993580}
   SimulationBehaviours: []
 --- !u!114 &-3670738341161330341
 MonoBehaviour:
@@ -79,9 +81,10 @@ MonoBehaviour:
   _interpolationDataSource: 0
   lookSensitivity: 135
   initialized: 0
-  seeker: 0
-  bulletPrefab: {fileID: 0}
+  bulletPrefab:
+    RawGuidValue: 00000000000000000000000000000000
   bulletSpawnPoint: {fileID: 0}
+  seeker: 0
 --- !u!143 &-8419998552225482450
 CharacterController:
   m_ObjectHideFlags: 0
@@ -93,13 +96,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 0
-  m_Radius: 0.3
+  m_Height: 2
+  m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.3, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &2629980346050216620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   InterpolationSpace: 0
-  InterpolationTarget: {fileID: 0}
+  InterpolationTarget: {fileID: 7561109478156919923}
   InterpolateErrorCorrection: 1
   InterpolatedErrorCorrectionSettings:
     MinRate: 3.3
@@ -187,6 +190,21 @@ MonoBehaviour:
     _hash: -814817977
   StateHashes: 000000008a18fce4b9abd9d32638cb43a21b1dacd9b6d9c8c327e322
   TriggerHashes: 00000000
+--- !u!114 &-5905674463923993580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4515667473665738065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8683896a04cf3e54688fcf156b584d47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  currentHealth: 100
+  healthBar: {fileID: 0}
 --- !u!1001 &6092433320158161769
 PrefabInstance:
   m_ObjectHideFlags: 0

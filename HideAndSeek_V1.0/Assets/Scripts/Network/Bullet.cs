@@ -17,7 +17,7 @@ public class Bullet : NetworkBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other != null)
+        if (other)
         {
             if (other.CompareTag("Player"))
             {
@@ -28,12 +28,10 @@ public class Bullet : NetworkBehaviour
                 }
             }
 
-            if (other.CompareTag("Bullet"))
+            if (Runner)
             {
                 if (Runner.IsServer)
-                {
                     Runner.Despawn(Object);
-                }
             }
         }
     }
