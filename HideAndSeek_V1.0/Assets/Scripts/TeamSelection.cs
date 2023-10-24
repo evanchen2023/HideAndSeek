@@ -4,7 +4,7 @@ using Fusion;
 
 public class TeamSelection : NetworkBehaviour
 {
-    [SerializeField] private PlayerRef PlayerRef; // Reference to the PlayerInfo network object.
+  /*  [SerializeField] private PlayerRef PlayerRef; // Reference to the PlayerInfo network object.
 
     public void SelectTeam(int newTeamId)
     {
